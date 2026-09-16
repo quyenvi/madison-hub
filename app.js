@@ -178,16 +178,66 @@ function bindTravel(){
  };
 }
 
+
+let scheduleTeam='all', scheduleView='upcoming';
+function validSchedule(raw){
+ if(!raw||raw.format!=='madison-hub-schedule'||raw.version!==1||!Array.isArray(raw.events)||raw.events.length>5000)throw Error('Choose a Madison Hub schedule JSON file.');
+ const dateOK=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&!Number.isNaN(Date.parse(value))&&new Date(value).toISOString().slice(0,10)===value;
+ const textOK=(v,max)=>typeof v==='string'&&v.length<=max;
+ if(!dateOK(raw.coverageStart)||!dateOK(raw.coverageEnd)||raw.coverageStart>raw.coverageEnd||!textOK(raw.exportedAt,50)||Number.isNaN(Date.parse(raw.exportedAt)))throw Error('This schedule has invalid date information.');
+ const events=raw.events.map((e,i)=>{
+  if(!e||!dateOK(e.date)||!dateOK(e.endDate)||e.endDate<e.date||e.date<raw.coverageStart||e.date>raw.coverageEnd||!textOK(e.team,100)||!e.team.trim()||!textOK(e.title,200)||!e.title.trim()||!textOK(e.details,3000))throw Error('This schedule contains an invalid event. The previous schedule has been kept.');
+  return {id:String(i),date:e.date,endDate:e.endDate,team:e.team,title:e.title,details:e.details};
+ });
+ return {format:raw.format,version:1,source:typeof raw.source==='string'?raw.source.slice(0,100):'Team calendar',timezone:'America/Los_Angeles',exportedAt:raw.exportedAt,coverageStart:raw.coverageStart,coverageEnd:raw.coverageEnd,events};
+}
+function calendarDate(date){return new Date(date+'T12:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});}
+function teamSchedule(){
+ const schedule=state.teamSchedule;
+ const teams=schedule?[...new Set(schedule.events.map(e=>e.team))].sort():[];
+ if(!teams.includes(scheduleTeam))scheduleTeam='all';
+ return '<section class="panel team-schedule" aria-labelledby="schedule-title"><div class="section-heading"><h2 id="schedule-title">Team schedule</h2><label class="small-button schedule-upload" for="schedule-file">Import schedule<input id="schedule-file" type="file" accept=".json,application/json"></label></div><p class="note">Schedule files stay in this browser on this device. Importing a new file replaces the saved schedule. Updates are not automatic.</p><p id="schedule-message" role="status"></p>'+
+ (schedule?'<p class="note">'+escapeHTML(schedule.source)+' · Snapshot from '+calendarDate(schedule.exportedAt.slice(0,10))+'<br>Coverage: '+calendarDate(schedule.coverageStart)+' – '+calendarDate(schedule.coverageEnd)+' · All event times Pacific</p><div class="schedule-filters"><label>Team<select id="schedule-team"><option value="all">All teams</option>'+teams.map(team=>'<option '+(team===scheduleTeam?'selected ':'')+'value="'+escapeHTML(team)+'">'+escapeHTML(team)+'</option>').join('')+'</select></label><label>Show<select id="schedule-view"><option value="upcoming" '+(scheduleView==='upcoming'?'selected':'')+'>Upcoming</option><option value="all" '+(scheduleView==='all'?'selected':'')+'>All imported events</option></select></label></div><div id="schedule-events"></div>':'<p>No schedule imported yet. Choose a schedule file to see practices, games, and tournaments here.</p>')+
+ '<p class="note">Confirm changes with your team. <a class="text-button" href="https://madison27.tomongo.chatgpt.site/#schedule" target="_blank" rel="noopener noreferrer">Open original calendar (sign-in required)</a></p></section>';
+}
+function drawSchedule(){
+ const target=document.querySelector('#schedule-events');if(!target)return;
+ const today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ const events=state.teamSchedule.events.filter(e=>(scheduleTeam==='all'||e.team===scheduleTeam)&&(scheduleView==='all'||e.endDate>=today)).sort((a,b)=>a.date.localeCompare(b.date)||a.team.localeCompare(b.team));
+ target.innerHTML=events.length?events.map(e=>'<article class="schedule-event"><div class="eyebrow">'+escapeHTML(e.team)+'</div><h3>'+escapeHTML(e.title)+'</h3><p><strong>'+calendarDate(e.date)+(e.endDate!==e.date?' – '+calendarDate(e.endDate):'')+'</strong></p><p class="trip-notes">'+escapeHTML(e.details)+'</p></article>').join(''):'<p class="note">No events match this view in your imported snapshot. Choose All imported events or import a newer schedule.</p>';
+}
+function bindSchedule(){
+ drawSchedule();
+ const team=document.querySelector('#schedule-team'),view=document.querySelector('#schedule-view');
+ if(team)team.onchange=event=>{scheduleTeam=event.target.value;drawSchedule();};
+ if(view)view.onchange=event=>{scheduleView=event.target.value;drawSchedule();};
+ document.querySelector('#schedule-file').onchange=async event=>{
+  const file=event.target.files[0];if(!file)return;
+  const message=document.querySelector('#schedule-message');
+  try{
+   if(file.size>2*1024*1024)throw Error('Choose a schedule file smaller than 2 MB.');
+   const next=validSchedule(JSON.parse(await file.text()));
+   // Persist before replacing the active schedule; a failed save leaves previous data intact.
+   localStorage.setItem('madison-hub-v1',JSON.stringify({...state,teamSchedule:next}));
+   state.teamSchedule=next;scheduleTeam='all';scheduleView='upcoming';render();
+   const feedback=document.querySelector('#schedule-message');
+   if(feedback){feedback.textContent=next.events.length+' events imported and saved on this device.';feedback.setAttribute('tabindex','-1');feedback.focus();}
+  }catch(error){if(message.isConnected)message.textContent=error instanceof SyntaxError?'This file is not valid JSON. Your previous schedule is unchanged.':error.name==='QuotaExceededError'?'This browser has no room to save the schedule. Your previous schedule is unchanged.':error.message||'Could not import the schedule.';}
+  event.target.value='';
+ };
+}
+
 function render(){const route=location.hash.slice(1);const active=sections.some(s=>s.id===route)?route:'home';document.title=`${active==='home'?'Home':sections.find(s=>s.id===active).name} · Madison Hub`;
  document.querySelector('#nav').innerHTML=[{id:'home',name:'Home'},...sections].map(s=>`<a class="nav-link" href="#${s.id}" ${s.id===active?'aria-current="page"':''}>${icon(s.id)}<span>${s.name}</span></a>`).join('');
  if(active==='home') main.innerHTML=home();
  if(active==='math'){startQuiz();main.innerHTML=math();bindMath();drawQuiz();}
- if(active==='basketball')main.innerHTML=intro('BASKETBALL','Make the next rep count.','A simple practice plan for your next time on the court.')+`<div class="two-col"><section class="panel"><h2>Today’s practice <span class="muted">· 15 min</span></h2>${checklist('basketball',content.basketball)}</section><aside class="panel basketball"><div class="eyebrow">YOUR FOCUS</div><h2>Control before speed.</h2><p>Stay balanced. Keep your eyes up. Make each rep intentional.</p><p class="note">Start with your usual warm-up. Take water breaks and follow your coach’s guidance.</p></aside></div>`;
+ if(active==='basketball')main.innerHTML=intro('BASKETBALL','Your next game. Your next rep.','Keep your team schedule and your practice plan together.')+teamSchedule()+`<div class="two-col"><section class="panel"><h2>Today’s practice <span class="muted">· 15 min</span></h2>${checklist('basketball',content.basketball)}</section><aside class="panel basketball"><div class="eyebrow">YOUR FOCUS</div><h2>Control before speed.</h2><p>Stay balanced. Keep your eyes up. Make each rep intentional.</p><p class="note">Start with your usual warm-up. Take water breaks and follow your coach’s guidance.</p></aside></div>`;
  if(active==='travel')main.innerHTML=travelPage();
  if(active==='school')main.innerHTML=intro('SCHOOL','A clear plan. A fresh start.','Keep the little things together, so you can focus on what’s next.')+`<div class="two-col"><section class="panel"><h2>Your daily checklist</h2>${checklist('school',content.school)}</section><aside class="panel school"><div class="eyebrow">ONE THING AT A TIME</div><h2>Make a little focus space.</h2><p>Choose one task, clear a spot, and put distractions aside. Take a short break when you finish.</p><a class="primary" href="#math">Try the math warm-up ↗</a></aside></div>`;
  if(['school','travel','basketball'].includes(active)){main.insertAdjacentHTML('beforeend',`<p class="note">Checkmarks are saved on this device. Use Reset checklist when you want a fresh start.</p>`);}
  main.insertAdjacentHTML('beforeend',`<p id="storage-warning" class="storage-warning" ${storageOK?'hidden':''}>This browser can’t save progress right now. You can still use the hub during this visit.</p>`);
  if(active==='travel')bindTravel();
+ if(active==='basketball')bindSchedule();
  updateProgress();main.querySelectorAll('input[data-group]').forEach(input=>input.onchange=()=>{state[input.dataset.group+':'+input.dataset.id]=input.checked;save();updateProgress();});
  main.querySelectorAll('[data-reset]').forEach(button=>button.onclick=()=>{main.querySelectorAll(`input[data-group="${button.dataset.reset}"]`).forEach(input=>{input.checked=false;delete state[input.dataset.group+':'+input.dataset.id];});save();updateProgress();});
 }

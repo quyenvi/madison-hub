@@ -1,10 +1,10 @@
 /* Increment VERSION whenever you change any app file, including content.js. */
-const VERSION = 'v3-delete-trip';
+const VERSION = 'v4-delete-trip';
 const PREFIX = 'madison-hub-' + self.registration.scope;
 const CACHE = PREFIX + VERSION;
 const APP = ['./','./index.html','./styles.css','./content.js','./app.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./maskable-512.png','./apple-touch-icon.png'];
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(APP)));
+  event.waitUntil(caches.open(CACHE).then(cache=>Promise.all(APP.map(async path => { const url = new URL(path, self.registration.scope); url.searchParams.set('release', VERSION); const response = await fetch(url, {cache:'reload'}); if(!response.ok) throw new Error('App download failed'); await cache.put(new URL(path, self.registration.scope), response); }))));
   // Let existing app windows finish on their current version. Close all windows to update.
 });
 self.addEventListener('activate', event => {
@@ -24,3 +24,4 @@ self.addEventListener('fetch', event => {
     }
   })());
 });
+

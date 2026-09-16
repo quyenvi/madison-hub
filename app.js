@@ -29,13 +29,84 @@ function home(){
 function checklist(group,items){
  return `<div class="progress-label" id="${group}-progress" aria-live="polite"></div><progress id="${group}-bar" max="${items.length || 1}" value="0" aria-label="${group} completed"></progress><div class="check-list">${items.map(item=>`<label class="check-row"><input type="checkbox" data-group="${group}" data-id="${escapeHTML(item.id)}" ${state[group+':'+item.id]?'checked':''}><span><strong>${escapeHTML(item.title)}</strong>${item.detail?`<small>${escapeHTML(item.detail)}</small>`:''}</span></label>`).join('')}</div><button class="text-button" data-reset="${group}">Reset checklist</button>`;
 }
-function updateProgress(){ for(const group of ['basketball','packing','school']){const inputs=[...document.querySelectorAll(`input[data-group="${group}"]`)]; if(!inputs.length)continue; const done=inputs.filter(i=>i.checked).length;document.querySelector(`#${group}-progress`).textContent=`${done} of ${inputs.length} complete`;document.querySelector(`#${group}-bar`).value=done;}}
+function updateProgress(){ for(const group of ['basketball','packing','school']){const inputs=[...document.querySelectorAll(`input[data-group="${group}"]`)]; if(!document.querySelector('#'+group+'-progress'))continue; const done=inputs.filter(i=>i.checked).length;document.querySelector(`#${group}-progress`).textContent=`${done} of ${inputs.length} complete`;document.querySelector(`#${group}-bar`).value=done;}}
 function math(){return intro('MATH','A little sharper, every day.','Take your time. Every question is a chance to learn.')+`<div class="two-col"><section class="panel" id="quiz" aria-label="Math practice"></section><aside class="panel"><h2>A good way to get unstuck</h2><ol class="steps"><li>Read the question one more time.</li><li>Write down what you know.</li><li>Try one small step, then check it.</li></ol><p class="note">Scratch paper is always welcome. This is practice, so there’s no timer.</p></aside></div>`;}
 function drawQuiz(){const target=document.querySelector('#quiz');if(quizIndex>=content.math.length){target.innerHTML=`<div class="eyebrow">PRACTICE COMPLETE</div><h2>Nice work showing up.</h2><p>You got <strong>${quizScore} of ${content.math.length}</strong> correct. Keep building from here.</p><button class="primary" id="restart">Practice again</button>`;document.querySelector('#restart').onclick=()=>{quizIndex=0;quizScore=0;answered=false;drawQuiz();};return;}
  const q=content.math[quizIndex];target.innerHTML=`<div class="progress-label">Question ${quizIndex+1} of ${content.math.length}</div><progress max="${content.math.length}" value="${quizIndex}" aria-label="Questions completed"></progress><h2 class="question">${escapeHTML(q.question)}</h2><div class="choices">${q.choices.map((c,i)=>`<button class="choice" data-answer="${i}">${escapeHTML(c)}</button>`).join('')}</div><div class="feedback" role="status" aria-live="polite"></div>`;
  target.querySelectorAll('[data-answer]').forEach(button=>button.onclick=()=>{if(answered)return;answered=true;const selected=Number(button.dataset.answer);const correct=selected===q.answer;if(correct)quizScore++;target.querySelectorAll('[data-answer]').forEach(b=>{b.disabled=true;if(Number(b.dataset.answer)===q.answer)b.classList.add('correct');else if(b===button)b.classList.add('wrong');});target.querySelector('.feedback').innerHTML=`<strong>${correct?'You’ve got it.':'Keep going — here’s how.'}</strong><br>${escapeHTML(q.explanation)}`;const next=document.createElement('button');next.className='primary quiz-next';next.textContent=quizIndex===content.math.length-1?'See how you did':'Next question';next.onclick=()=>{quizIndex++;answered=false;drawQuiz();document.querySelector('#quiz h2').setAttribute('tabindex','-1');document.querySelector('#quiz h2').focus();};target.append(next);});
 }
 
+const TRIP_TEMPLATES = [
+  {
+    "id": "disneyland",
+    "title": "Disneyland day",
+    "details": "Before you go: plan the day with your family.\nMorning: choose a few favorite attractions.\nAfternoon: take a lunch and rest break.\nEvening: pick one last activity together.",
+    "items": [
+      "Comfortable walking shoes",
+      "Refillable water bottle",
+      "Hat",
+      "Sunscreen",
+      "Light jacket",
+      "Portable charger"
+    ]
+  },
+  {
+    "id": "beach",
+    "title": "Beach day",
+    "details": "Morning: find a spot with your family.\nAfternoon: enjoy a picnic, beach games, and a shoreline walk.\nBefore leaving: gather your things and leave the beach clean.",
+    "items": [
+      "Swimsuit",
+      "Beach towel",
+      "Sunscreen",
+      "Hat",
+      "Sandals",
+      "Dry clothes",
+      "Water bottle"
+    ]
+  },
+  {
+    "id": "tournament",
+    "title": "Basketball tournament",
+    "details": "Before leaving: confirm game times and the court with your family or coach.\nBefore each game: warm up with your team.\nBetween games: refill water, have a snack, and rest.",
+    "items": [
+      "Team uniform",
+      "Basketball shoes",
+      "Extra socks",
+      "Water bottle",
+      "Snacks",
+      "Warm-up layer",
+      "Change of clothes"
+    ]
+  },
+  {
+    "id": "camping",
+    "title": "Camping weekend",
+    "details": "Arrival: help your family set up camp.\nDaytime: choose a short walk or a campsite game.\nEvening: have dinner together and get ready for a night outdoors.",
+    "items": [
+      "Sleeping bag",
+      "Sleeping pad",
+      "Flashlight",
+      "Warm layers",
+      "Rain jacket",
+      "Insect repellent",
+      "Toiletries",
+      "Water bottle"
+    ]
+  },
+  {
+    "id": "city",
+    "title": "City adventure",
+    "details": "Morning: choose a museum, park, or neighborhood to explore.\nAfternoon: stop for lunch and try one new activity.\nBefore heading home: check that everyone has their things.",
+    "items": [
+      "Comfortable walking shoes",
+      "Small backpack",
+      "Water bottle",
+      "Light jacket",
+      "Portable charger",
+      "Snacks"
+    ]
+  }
+];
 function travelTrips(){
  if(!Array.isArray(state.trips)){
   state.trips=[{id:'sample',title:content.trip.title,subtitle:content.trip.subtitle,stops:content.trip.stops,items:content.packing.map(item=>({...item}))}];
@@ -47,7 +118,7 @@ function travelPage(){const trips=travelTrips(),trip=currentTrip();return intro(
  '<div class="trip-toolbar"><label for="trip-select">Your trips<select id="trip-select" '+(!trip?'disabled':'')+'>'+(!trip?'<option>No trips yet</option>':'')+trips.map(t=>'<option value="'+escapeHTML(t.id)+'" '+(t.id===trip.id?'selected':'')+'>'+escapeHTML(t.title)+'</option>').join('')+'</select></label><button class="primary" id="add-trip">+ Add trip</button></div>'+
  (trip?'<div class="two-col"><section class="panel"><button class="text-button delete-trip" id="delete-trip">Delete trip</button><h2>'+escapeHTML(trip.title)+'</h2><p class="muted trip-notes">'+escapeHTML(trip.subtitle||'Your next adventure starts here.')+'</p>'+trip.stops.map(s=>'<div class="timeline-item"><time>'+escapeHTML(s.time)+'</time><div><h3>'+escapeHTML(s.title)+'</h3><p>'+escapeHTML(s.detail)+'</p></div></div>').join('')+'</section><section class="panel"><h2>Before you go</h2>'+checklist('packing',trip.items)+
  '<form id="item-form" class="item-form"><label for="item-name">New packing item</label><div class="item-controls"><input id="item-name" name="item" required maxlength="100" placeholder="e.g. Basketball shoes" autocomplete="off"><button class="primary" type="submit">Add item</button></div></form><p id="item-message" class="note" role="status"></p></section></div>':'<section class="panel"><h2>No trips yet</h2><p>Add a trip to start a new packing list.</p></section>')+'<p class="note">Your trips and lists stay on this device. They aren’t shared with other visitors or synced between phones.</p>'+
- '<dialog id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-description"><h2 id="delete-title">Delete this trip?</h2><p id="delete-description">Delete “'+escapeHTML(trip?.title||'')+'” and its packing list from this device? This can’t be undone.</p><div class="form-actions"><button class="small-button" id="keep-trip" autofocus>Keep trip</button><button class="primary danger-button" id="confirm-delete-trip">Delete trip</button></div></dialog><dialog id="trip-dialog" aria-labelledby="trip-dialog-title"><h2 id="trip-dialog-title">Where are you headed?</h2><form id="trip-form" class="trip-form"><label for="trip-name">Trip name<input id="trip-name" name="title" required maxlength="100" placeholder="e.g. Weekend in San Diego"></label><label for="trip-details">Trip details <span class="muted">(optional)</span><textarea id="trip-details" name="details" maxlength="2000" rows="4" placeholder="Dates, places to visit, or a plan for the day"></textarea></label><p class="note">We’ll start your packing list with a few essentials. You can add more below.</p><div class="form-actions"><button type="button" class="small-button" id="cancel-trip">Cancel</button><button type="submit" class="primary">Create trip</button></div></form></dialog>';
+ '<dialog id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-description"><h2 id="delete-title">Delete this trip?</h2><p id="delete-description">Delete “'+escapeHTML(trip?.title||'')+'” and its packing list from this device? This can’t be undone.</p><div class="form-actions"><button class="small-button" id="keep-trip" autofocus>Keep trip</button><button class="primary danger-button" id="confirm-delete-trip">Delete trip</button></div></dialog><dialog id="trip-dialog" aria-labelledby="trip-dialog-title"><h2 id="trip-dialog-title">Where are you headed?</h2><form id="trip-form" class="trip-form"><label for="trip-template">Start with a template<select id="trip-template"><option value="">Blank trip</option>'+TRIP_TEMPLATES.map(t=>'<option value="'+t.id+'">'+escapeHTML(t.title)+'</option>').join('')+'</select></label><label for="trip-name">Trip name<input id="trip-name" name="title" required maxlength="100" placeholder="e.g. Weekend in San Diego"></label><label for="trip-details">Trip details <span class="muted">(optional)</span><textarea id="trip-details" name="details" maxlength="2000" rows="4" placeholder="Dates, places to visit, or a plan for the day"></textarea></label><div id="template-items" class="note" aria-live="polite"></div><p class="note">Choose a starter trip or begin with a blank list. Change the name and details to make it yours, then add packing items anytime.</p><div class="form-actions"><button type="button" class="small-button" id="cancel-trip">Cancel</button><button type="submit" class="primary">Create trip</button></div></form></dialog>';
 }
 function bindTravel(){
  const deleteButton=document.querySelector('#delete-trip');
@@ -65,13 +136,20 @@ function bindTravel(){
  }
  document.querySelector('#trip-select').onchange=event=>{state.selectedTrip=event.target.value;save();render();document.querySelector('#trip-select').focus();};
  const dialog=document.querySelector('#trip-dialog');
+ document.querySelector('#trip-template').onchange=event=>{
+  const template=TRIP_TEMPLATES.find(t=>t.id===event.target.value);
+  document.querySelector('#trip-name').value=template?.title||'';
+  document.querySelector('#trip-name').setCustomValidity('');
+  document.querySelector('#trip-details').value=template?.details||''; document.querySelector('#template-items').textContent=template?'Packing list: '+template.items.join(', ')+'.':'Your packing list starts empty.';
+ };
+
  document.querySelector('#add-trip').onclick=()=>dialog.showModal();
  document.querySelector('#cancel-trip').onclick=()=>dialog.close();
  document.querySelector('#trip-form').onsubmit=event=>{
   event.preventDefault();const field=document.querySelector('#trip-name'),title=field.value.trim();
   if(!title){field.setCustomValidity('Enter a trip name.');field.reportValidity();return;}
   const id=crypto.randomUUID();
-  travelTrips().push({id,title,subtitle:document.querySelector('#trip-details').value.trim(),stops:[],items:content.packing.map(item=>({...item,id:id+'-'+item.id}))});
+  travelTrips().push({id,title,subtitle:document.querySelector('#trip-details').value.trim(),stops:[],items:(TRIP_TEMPLATES.find(t=>t.id===document.querySelector('#trip-template').value)?.items||[]).map((title,index)=>({id:id+'-'+index,title}))});
   state.selectedTrip=id;save();dialog.close();render();document.querySelector('#trip-select').focus();
  };
  document.querySelector('#trip-name').oninput=event=>event.target.setCustomValidity('');
@@ -107,3 +185,4 @@ let offlineReady=false;
 function connection(){document.querySelector('#connection').textContent=!navigator.onLine?(offlineReady?'Offline · ready to use':'You’re offline'):(offlineReady?'Ready offline':'Online');}
 window.addEventListener('online',connection);window.addEventListener('offline',connection);connection();
 if('serviceWorker' in navigator && window.isSecureContext){navigator.serviceWorker.register('./sw.js').then(async registration=>{await navigator.serviceWorker.ready;offlineReady=true;connection();registration.update().catch(()=>{});}).catch(()=>{document.querySelector('#connection').textContent='Online only';});}
+

@@ -37,19 +37,32 @@ function drawQuiz(){const target=document.querySelector('#quiz');if(quizIndex>=c
 }
 
 function travelTrips(){
- if(!Array.isArray(state.trips) || !state.trips.length){
+ if(!Array.isArray(state.trips)){
   state.trips=[{id:'sample',title:content.trip.title,subtitle:content.trip.subtitle,stops:content.trip.stops,items:content.packing.map(item=>({...item}))}];
  }
  return state.trips;
 }
 function currentTrip(){const trips=travelTrips();return trips.find(t=>t.id===state.selectedTrip)||trips[0];}
 function travelPage(){const trips=travelTrips(),trip=currentTrip();return intro('TRAVEL','Your next little adventure.','Plan a trip. Make a list. Get ready to go.')+
- '<div class="trip-toolbar"><label for="trip-select">Your trips<select id="trip-select">'+trips.map(t=>'<option value="'+escapeHTML(t.id)+'" '+(t.id===trip.id?'selected':'')+'>'+escapeHTML(t.title)+'</option>').join('')+'</select></label><button class="primary" id="add-trip">+ Add trip</button></div>'+
- '<div class="two-col"><section class="panel"><h2>'+escapeHTML(trip.title)+'</h2><p class="muted trip-notes">'+escapeHTML(trip.subtitle||'Your next adventure starts here.')+'</p>'+trip.stops.map(s=>'<div class="timeline-item"><time>'+escapeHTML(s.time)+'</time><div><h3>'+escapeHTML(s.title)+'</h3><p>'+escapeHTML(s.detail)+'</p></div></div>').join('')+'</section><section class="panel"><h2>Before you go</h2>'+checklist('packing',trip.items)+
- '<form id="item-form" class="item-form"><label for="item-name">New packing item</label><div class="item-controls"><input id="item-name" name="item" required maxlength="100" placeholder="e.g. Basketball shoes" autocomplete="off"><button class="primary" type="submit">Add item</button></div></form><p id="item-message" class="note" role="status"></p></section></div><p class="note">Your trips and lists stay on this device. They aren’t shared with other visitors or synced between phones.</p>'+
- '<dialog id="trip-dialog" aria-labelledby="trip-dialog-title"><h2 id="trip-dialog-title">Where are you headed?</h2><form id="trip-form" class="trip-form"><label for="trip-name">Trip name<input id="trip-name" name="title" required maxlength="100" placeholder="e.g. Weekend in San Diego"></label><label for="trip-details">Trip details <span class="muted">(optional)</span><textarea id="trip-details" name="details" maxlength="2000" rows="4" placeholder="Dates, places to visit, or a plan for the day"></textarea></label><p class="note">We’ll start your packing list with a few essentials. You can add more below.</p><div class="form-actions"><button type="button" class="small-button" id="cancel-trip">Cancel</button><button type="submit" class="primary">Create trip</button></div></form></dialog>';
+ '<div class="trip-toolbar"><label for="trip-select">Your trips<select id="trip-select" '+(!trip?'disabled':'')+'>'+(!trip?'<option>No trips yet</option>':'')+trips.map(t=>'<option value="'+escapeHTML(t.id)+'" '+(t.id===trip.id?'selected':'')+'>'+escapeHTML(t.title)+'</option>').join('')+'</select></label><button class="primary" id="add-trip">+ Add trip</button></div>'+
+ (trip?'<div class="two-col"><section class="panel"><button class="text-button delete-trip" id="delete-trip">Delete trip</button><h2>'+escapeHTML(trip.title)+'</h2><p class="muted trip-notes">'+escapeHTML(trip.subtitle||'Your next adventure starts here.')+'</p>'+trip.stops.map(s=>'<div class="timeline-item"><time>'+escapeHTML(s.time)+'</time><div><h3>'+escapeHTML(s.title)+'</h3><p>'+escapeHTML(s.detail)+'</p></div></div>').join('')+'</section><section class="panel"><h2>Before you go</h2>'+checklist('packing',trip.items)+
+ '<form id="item-form" class="item-form"><label for="item-name">New packing item</label><div class="item-controls"><input id="item-name" name="item" required maxlength="100" placeholder="e.g. Basketball shoes" autocomplete="off"><button class="primary" type="submit">Add item</button></div></form><p id="item-message" class="note" role="status"></p></section></div>':'<section class="panel"><h2>No trips yet</h2><p>Add a trip to start a new packing list.</p></section>')+'<p class="note">Your trips and lists stay on this device. They aren’t shared with other visitors or synced between phones.</p>'+
+ '<dialog id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-description"><h2 id="delete-title">Delete this trip?</h2><p id="delete-description">Delete “'+escapeHTML(trip?.title||'')+'” and its packing list from this device? This can’t be undone.</p><div class="form-actions"><button class="small-button" id="keep-trip" autofocus>Keep trip</button><button class="primary danger-button" id="confirm-delete-trip">Delete trip</button></div></dialog><dialog id="trip-dialog" aria-labelledby="trip-dialog-title"><h2 id="trip-dialog-title">Where are you headed?</h2><form id="trip-form" class="trip-form"><label for="trip-name">Trip name<input id="trip-name" name="title" required maxlength="100" placeholder="e.g. Weekend in San Diego"></label><label for="trip-details">Trip details <span class="muted">(optional)</span><textarea id="trip-details" name="details" maxlength="2000" rows="4" placeholder="Dates, places to visit, or a plan for the day"></textarea></label><p class="note">We’ll start your packing list with a few essentials. You can add more below.</p><div class="form-actions"><button type="button" class="small-button" id="cancel-trip">Cancel</button><button type="submit" class="primary">Create trip</button></div></form></dialog>';
 }
 function bindTravel(){
+ const deleteButton=document.querySelector('#delete-trip');
+ if(deleteButton){
+  const deleteDialog=document.querySelector('#delete-dialog');
+  deleteButton.onclick=()=>deleteDialog.showModal();
+  document.querySelector('#keep-trip').onclick=()=>deleteDialog.close();
+  document.querySelector('#confirm-delete-trip').onclick=()=>{
+   const trip=currentTrip();
+   for(const item of trip.items)delete state['packing:'+item.id];
+   state.trips=travelTrips().filter(t=>t.id!==trip.id);
+   state.selectedTrip=state.trips[0]?.id||null;
+   save();deleteDialog.close();render();document.querySelector('#add-trip').focus();
+  };
+ }
  document.querySelector('#trip-select').onchange=event=>{state.selectedTrip=event.target.value;save();render();document.querySelector('#trip-select').focus();};
  const dialog=document.querySelector('#trip-dialog');
  document.querySelector('#add-trip').onclick=()=>dialog.showModal();
@@ -62,6 +75,7 @@ function bindTravel(){
   state.selectedTrip=id;save();dialog.close();render();document.querySelector('#trip-select').focus();
  };
  document.querySelector('#trip-name').oninput=event=>event.target.setCustomValidity('');
+ if(!currentTrip())return;
  document.querySelector('#item-name').oninput=event=>event.target.setCustomValidity('');
  document.querySelector('#item-form').onsubmit=event=>{
   event.preventDefault();const field=document.querySelector('#item-name'),title=field.value.trim();

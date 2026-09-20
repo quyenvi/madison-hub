@@ -90,6 +90,229 @@ window.HUB_CONTENT = {
   ],
   "mathLevels": [
     {
+      "id": "ltq2",
+      "name": "LTQ #2 · Signed fractions",
+      "description": "LT 1.4–1.6 topic practice: add, multiply, and divide positive and negative fractions. 18 original practice questions with worked explanations; these are not the teacher’s quiz or packet questions.",
+      "questions": [
+        {
+          "topic": "LTQ #2 · Add fractions",
+          "question": "(1/3) + (1/4) = ?",
+          "choices": [
+            "7/12",
+            "-7/12",
+            "19/12",
+            "-5/12"
+          ],
+          "answer": 0,
+          "explanation": "Use a common denominator: (4/12) + (3/12) = 7/12. Combine the signed numerators, then simplify to 7/12."
+        },
+        {
+          "topic": "LTQ #2 · Add fractions",
+          "question": "(-2/3) + (1/6) = ?",
+          "choices": [
+            "1/2",
+            "-1/2",
+            "-3/2",
+            "3/2"
+          ],
+          "answer": 1,
+          "explanation": "Use a common denominator: (-12/18) + (3/18) = -9/18. Combine the signed numerators, then simplify to -1/2."
+        },
+        {
+          "topic": "LTQ #2 · Add fractions",
+          "question": "(-3/8) + (-1/4) = ?",
+          "choices": [
+            "5/8",
+            "3/8",
+            "-5/8",
+            "-13/8"
+          ],
+          "answer": 2,
+          "explanation": "Use a common denominator: (-12/32) + (-8/32) = -20/32. Combine the signed numerators, then simplify to -5/8."
+        },
+        {
+          "topic": "LTQ #2 · Add fractions",
+          "question": "(5/6) + (-3/4) = ?",
+          "choices": [
+            "-1/12",
+            "13/12",
+            "-11/12",
+            "1/12"
+          ],
+          "answer": 3,
+          "explanation": "Use a common denominator: (20/24) + (-18/24) = 2/24. Combine the signed numerators, then simplify to 1/12."
+        },
+        {
+          "topic": "LTQ #2 · Add fractions",
+          "question": "(-7/10) + (7/10) = ?",
+          "choices": [
+            "0",
+            "1",
+            "-1",
+            "2"
+          ],
+          "answer": 0,
+          "explanation": "Use a common denominator: (-70/100) + (70/100) = 0/100. Combine the signed numerators, then simplify to 0."
+        },
+        {
+          "topic": "LTQ #2 · Add fractions",
+          "question": "(-5/12) + (7/18) = ?",
+          "choices": [
+            "1/36",
+            "-1/36",
+            "35/36",
+            "-37/36"
+          ],
+          "answer": 1,
+          "explanation": "Use a common denominator: (-90/216) + (84/216) = -6/216. Combine the signed numerators, then simplify to -1/36."
+        },
+        {
+          "topic": "LTQ #2 · Multiply fractions",
+          "question": "(2/3) × (3/5) = ?",
+          "choices": [
+            "-2/5",
+            "7/5",
+            "2/5",
+            "-3/5"
+          ],
+          "answer": 2,
+          "explanation": "Multiply numerators and denominators: (2 × 3) / (3 × 5) = 6/15. Same signs give a positive product; different signs give a negative product. Simplify to 2/5."
+        },
+        {
+          "topic": "LTQ #2 · Multiply fractions",
+          "question": "(-3/4) × (2/9) = ?",
+          "choices": [
+            "1/6",
+            "5/6",
+            "-7/6",
+            "-1/6"
+          ],
+          "answer": 3,
+          "explanation": "Multiply numerators and denominators: (-3 × 2) / (4 × 9) = -6/36. Same signs give a positive product; different signs give a negative product. Simplify to -1/6."
+        },
+        {
+          "topic": "LTQ #2 · Multiply fractions",
+          "question": "(-5/6) × (-3/10) = ?",
+          "choices": [
+            "1/4",
+            "-1/4",
+            "5/4",
+            "-3/4"
+          ],
+          "answer": 0,
+          "explanation": "Multiply numerators and denominators: (-5 × -3) / (6 × 10) = 15/60. Same signs give a positive product; different signs give a negative product. Simplify to 1/4."
+        },
+        {
+          "topic": "LTQ #2 · Multiply fractions",
+          "question": "(7/8) × (-4/7) = ?",
+          "choices": [
+            "1/2",
+            "-1/2",
+            "-3/2",
+            "3/2"
+          ],
+          "answer": 1,
+          "explanation": "Multiply numerators and denominators: (7 × -4) / (8 × 7) = -28/56. Same signs give a positive product; different signs give a negative product. Simplify to -1/2."
+        },
+        {
+          "topic": "LTQ #2 · Multiply fractions",
+          "question": "(-9/10) × (-5/3) = ?",
+          "choices": [
+            "-3/2",
+            "5/2",
+            "3/2",
+            "1/2"
+          ],
+          "answer": 2,
+          "explanation": "Multiply numerators and denominators: (-9 × -5) / (10 × 3) = 45/30. Same signs give a positive product; different signs give a negative product. Simplify to 3/2."
+        },
+        {
+          "topic": "LTQ #2 · Multiply fractions",
+          "question": "(-7/12) × (6/5) = ?",
+          "choices": [
+            "7/10",
+            "3/10",
+            "-17/10",
+            "-7/10"
+          ],
+          "answer": 3,
+          "explanation": "Multiply numerators and denominators: (-7 × 6) / (12 × 5) = -42/60. Same signs give a positive product; different signs give a negative product. Simplify to -7/10."
+        },
+        {
+          "topic": "LTQ #2 · Divide fractions",
+          "question": "(3/4) ÷ (1/2) = ?",
+          "choices": [
+            "3/2",
+            "-3/2",
+            "5/2",
+            "1/2"
+          ],
+          "answer": 0,
+          "explanation": "Keep 3/4 and multiply by the reciprocal of (1/2): (3/4) × (2). Same signs give a positive quotient; different signs give a negative quotient. Simplify to 3/2."
+        },
+        {
+          "topic": "LTQ #2 · Divide fractions",
+          "question": "(-2/3) ÷ (4/5) = ?",
+          "choices": [
+            "5/6",
+            "-5/6",
+            "1/6",
+            "-11/6"
+          ],
+          "answer": 1,
+          "explanation": "Keep -2/3 and multiply by the reciprocal of (4/5): (-2/3) × (5/4). Same signs give a positive quotient; different signs give a negative quotient. Simplify to -5/6."
+        },
+        {
+          "topic": "LTQ #2 · Divide fractions",
+          "question": "(5/6) ÷ (-5/9) = ?",
+          "choices": [
+            "3/2",
+            "-1/2",
+            "-3/2",
+            "-5/2"
+          ],
+          "answer": 2,
+          "explanation": "Keep 5/6 and multiply by the reciprocal of (-5/9): (5/6) × (-9/5). Same signs give a positive quotient; different signs give a negative quotient. Simplify to -3/2."
+        },
+        {
+          "topic": "LTQ #2 · Divide fractions",
+          "question": "(-7/8) ÷ (-7/4) = ?",
+          "choices": [
+            "-1/2",
+            "3/2",
+            "5/2",
+            "1/2"
+          ],
+          "answer": 3,
+          "explanation": "Keep -7/8 and multiply by the reciprocal of (-7/4): (-7/8) × (-4/7). Same signs give a positive quotient; different signs give a negative quotient. Simplify to 1/2."
+        },
+        {
+          "topic": "LTQ #2 · Divide fractions",
+          "question": "(-3/5) ÷ (9/10) = ?",
+          "choices": [
+            "-2/3",
+            "2/3",
+            "1/3",
+            "-5/3"
+          ],
+          "answer": 0,
+          "explanation": "Keep -3/5 and multiply by the reciprocal of (9/10): (-3/5) × (10/9). Same signs give a positive quotient; different signs give a negative quotient. Simplify to -2/3."
+        },
+        {
+          "topic": "LTQ #2 · Divide fractions",
+          "question": "(-11/12) ÷ (-2/3) = ?",
+          "choices": [
+            "-11/8",
+            "11/8",
+            "19/8",
+            "3/8"
+          ],
+          "answer": 1,
+          "explanation": "Keep -11/12 and multiply by the reciprocal of (-2/3): (-11/12) × (-3/2). Same signs give a positive quotient; different signs give a negative quotient. Simplify to 11/8."
+        }
+      ]
+    },
+    {
       "id": "foundations",
       "name": "Foundations",
       "description": "Fractions, decimals, percentages, and one-step reasoning.",

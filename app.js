@@ -234,11 +234,21 @@ function bindSchedule(){
  };
 }
 
+
+function acesSkills(){
+ const drills=[
+  {title:'Layup Drill',category:'Shooting',detail:'10 reps without dropping the ball on the floor.',url:'https://www.instagram.com/reel/DdIndUNivET/'},
+  {title:'Driving Angle Skill/Concept',category:'Other',detail:'',url:'https://www.instagram.com/reel/DdKz08Djms8/'},
+  {title:'Wall Form Shooting Drill',category:'Shooting',detail:'',url:'https://www.instagram.com/reel/Czutsn4tF4R/'}
+ ];
+ return '<section class="panel" aria-labelledby="aces-skills-heading"><div class="eyebrow">LEARN. PRACTICE. GROW.</div><h2 id="aces-skills-heading">VFW Aces Skills</h2><p>Drills from your team, ready for your next practice.</p><div class="two-col">'+drills.map(d=>'<article class="panel"><div class="eyebrow">'+escapeHTML(d.category)+'</div><h3>'+escapeHTML(d.title)+'</h3>'+(d.detail?'<p>'+escapeHTML(d.detail)+'</p>':'')+'<a class="primary" href="'+escapeHTML(d.url)+'" target="_blank" rel="noopener noreferrer">Watch on Instagram ↗</a></article>').join('')+'</div><p class="note">Copied from the Aces Skills page on September 20, 2026. New team posts appear here after an update. Video links open Instagram, which may ask you to sign in. Ask a parent if you need help watching.</p></section>';
+}
+
 function render(){const route=location.hash.slice(1);const active=sections.some(s=>s.id===route)?route:'home';document.title=`${active==='home'?'Home':sections.find(s=>s.id===active).name} · Madison Hub`;
  document.querySelector('#nav').innerHTML=[{id:'home',name:'Home'},...sections].map(s=>`<a class="nav-link" href="#${s.id}" ${s.id===active?'aria-current="page"':''}>${icon(s.id)}<span>${s.name}</span></a>`).join('');
  if(active==='home') main.innerHTML=home();
  if(active==='math'){startQuiz();main.innerHTML=math();bindMath();drawQuiz();}
- if(active==='basketball')main.innerHTML=intro('BASKETBALL','Your next game. Your next rep.','Keep your team schedule and your practice plan together.')+teamSchedule()+`<div class="two-col"><section class="panel"><h2>Today’s practice <span class="muted">· 15 min</span></h2>${checklist('basketball',content.basketball)}</section><aside class="panel basketball"><div class="eyebrow">YOUR FOCUS</div><h2>Control before speed.</h2><p>Stay balanced. Keep your eyes up. Make each rep intentional.</p><p class="note">Start with your usual warm-up. Take water breaks and follow your coach’s guidance.</p></aside></div>`;
+ if(active==='basketball')main.innerHTML=intro('BASKETBALL','Your next game. Your next rep.','Keep your team schedule and your practice plan together.')+teamSchedule()+acesSkills()+`<div class="two-col"><section class="panel"><h2>Today’s practice <span class="muted">· 15 min</span></h2>${checklist('basketball',content.basketball)}</section><aside class="panel basketball"><div class="eyebrow">YOUR FOCUS</div><h2>Control before speed.</h2><p>Stay balanced. Keep your eyes up. Make each rep intentional.</p><p class="note">Start with your usual warm-up. Take water breaks and follow your coach’s guidance.</p></aside></div>`;
  if(active==='travel')main.innerHTML=travelPage();
  if(active==='school')main.innerHTML=intro('SCHOOL','A clear plan. A fresh start.','Keep the little things together, so you can focus on what’s next.')+`<div class="two-col"><section class="panel"><h2>Your daily checklist</h2>${checklist('school',content.school)}</section><aside class="panel school"><div class="eyebrow">ONE THING AT A TIME</div><h2>Make a little focus space.</h2><p>Choose one task, clear a spot, and put distractions aside. Take a short break when you finish.</p><a class="primary" href="#math">Try the math warm-up ↗</a></aside></div>`;
  if(['school','travel','basketball'].includes(active)){main.insertAdjacentHTML('beforeend',`<p class="note">Checkmarks are saved on this device. Use Reset checklist when you want a fresh start.</p>`);}

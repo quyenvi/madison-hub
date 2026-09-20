@@ -1,5 +1,5 @@
 /* Increment VERSION whenever you change any app file, including content.js. */
-const VERSION = 'v9-aces-skills';
+const VERSION = 'v10-aces-youtube';
 const PREFIX = 'madison-hub-' + self.registration.scope;
 const CACHE = PREFIX + VERSION;
 const APP = ['./','./index.html','./styles.css','./content.js','./app.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./maskable-512.png','./apple-touch-icon.png'];

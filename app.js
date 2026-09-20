@@ -237,11 +237,11 @@ function bindSchedule(){
 
 function acesSkills(){
  const drills=[
-  {title:'Layup Drill',category:'Shooting',detail:'10 reps without dropping the ball on the floor.',url:'https://www.instagram.com/reel/DdIndUNivET/'},
-  {title:'Driving Angle Skill/Concept',category:'Other',detail:'',url:'https://www.instagram.com/reel/DdKz08Djms8/'},
-  {title:'Wall Form Shooting Drill',category:'Shooting',detail:'',url:'https://www.instagram.com/reel/Czutsn4tF4R/'}
+  {title:'Layup Drill',category:'Shooting',detail:'Sibelle Zambie · Two-ball Mikan drill. Aim for 10 reps without dropping the ball.',url:'https://www.youtube.com/shorts/zg3ikuRmufA'},
+  {title:'Driving Angle Skill/Concept',category:'Other',detail:'Danny Cooper · Opens at 6:03 in the full lesson: arm position, quick second dribble, and closing the gap.',url:'https://www.youtube.com/watch?v=wBlDWb10RKg&t=363s'},
+  {title:'Wall Form Shooting Drill',category:'Shooting',detail:'Dolan Tierney · Practice a straight shooting motion at the wall, then move to the hoop.',url:'https://www.youtube.com/shorts/A4OSjuwors0'}
  ];
- return '<section class="panel" aria-labelledby="aces-skills-heading"><div class="eyebrow">LEARN. PRACTICE. GROW.</div><h2 id="aces-skills-heading">VFW Aces Skills</h2><p>Drills from your team, ready for your next practice.</p><div class="two-col">'+drills.map(d=>'<article class="panel"><div class="eyebrow">'+escapeHTML(d.category)+'</div><h3>'+escapeHTML(d.title)+'</h3>'+(d.detail?'<p>'+escapeHTML(d.detail)+'</p>':'')+'<a class="primary" href="'+escapeHTML(d.url)+'" target="_blank" rel="noopener noreferrer">Watch on Instagram ↗</a></article>').join('')+'</div><p class="note">Copied from the Aces Skills page on September 20, 2026. New team posts appear here after an update. Video links open Instagram, which may ask you to sign in. Ask a parent if you need help watching.</p></section>';
+ return '<section class="panel" aria-labelledby="aces-skills-heading"><div class="eyebrow">LEARN. PRACTICE. GROW.</div><h2 id="aces-skills-heading">VFW Aces Skills</h2><p>Drills from your team, ready for your next practice.</p><div class="two-col">'+drills.map(d=>'<article class="panel"><div class="eyebrow">'+escapeHTML(d.category)+'</div><h3>'+escapeHTML(d.title)+'</h3>'+(d.detail?'<p>'+escapeHTML(d.detail)+'</p>':'')+'<a class="primary" href="'+escapeHTML(d.url)+'" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></article>').join('')+'</div><p class="note">Drills selected from the Aces Skills page. Links open the original creators’ YouTube videos; the driving-angle video starts at the matching section of a longer lesson. No Instagram account needed.</p></section>';
 }
 
 function render(){const route=location.hash.slice(1);const active=sections.some(s=>s.id===route)?route:'home';document.title=`${active==='home'?'Home':sections.find(s=>s.id===active).name} · Madison Hub`;

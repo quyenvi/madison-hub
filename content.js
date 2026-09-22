@@ -1,4 +1,6 @@
 // Editable starter content. Answers are zero-based choice indexes.
+// Weekly school update: edit `schoolMeta` and `classes` (usually Sundays).
+// Leave `upcoming` empty until the work is published in Aeries or Canvas.
 window.HUB_CONTENT = {
   "name": "Madison",
   "basketball": [
@@ -86,6 +88,157 @@ window.HUB_CONTENT = {
       "id": "bag",
       "title": "Pack for tomorrow",
       "detail": "Planner, homework, water bottle. Ready to go."
+    }
+  ],
+  "schoolMeta": {
+    "asOf": "2026-09-22",
+    "source": "Aeries + Weekly Progress 2026-09-21",
+    "note": "Upcoming work only when published in Aeries/Canvas."
+  },
+  "classes": [
+    {
+      "id": "pe",
+      "period": "1",
+      "course": "PE",
+      "teacher": "Handley",
+      "room": "Gym",
+      "avg": 3.7,
+      "mark": "A",
+      "quarter": "1",
+      "topic": "not published",
+      "recent": [
+        {
+          "title": "Weekly grade (week of 9/8–9/11)",
+          "due": "2026-09-11",
+          "score": 3
+        }
+      ],
+      "upcoming": [],
+      "lastUpdated": "2026-09-22"
+    },
+    {
+      "id": "world-history",
+      "period": "2",
+      "course": "World History 7",
+      "teacher": "Phan",
+      "room": "P33",
+      "avg": 4.0,
+      "mark": "A",
+      "quarter": "1",
+      "topic": "not published",
+      "recent": [],
+      "upcoming": [],
+      "lastUpdated": "2026-09-22"
+    },
+    {
+      "id": "advisement",
+      "period": "Advise",
+      "course": "Advisement",
+      "teacher": "Barnes",
+      "room": "ILab",
+      "topic": "not published",
+      "recent": [],
+      "upcoming": [],
+      "lastUpdated": "2026-09-22"
+    },
+    {
+      "id": "math",
+      "period": "3",
+      "course": "Math 7",
+      "teacher": "Aldana",
+      "room": "16",
+      "avg": 3.6,
+      "mark": "A-",
+      "quarter": "1",
+      "topic": "LT 1.4–1.6 signed fractions. LTQ #2 is Tuesday, September 22, 2026. Extra Practice Packet through page 13.",
+      "recent": [],
+      "upcoming": [],
+      "lastUpdated": "2026-09-22"
+    },
+    {
+      "id": "science",
+      "period": "4",
+      "course": "Science 7",
+      "teacher": "Blair",
+      "room": "23",
+      "avg": 4.0,
+      "mark": "A",
+      "quarter": "1",
+      "topic": "Lab safety / initial model-based explanation / health unit wrap from recent scores.",
+      "recent": [
+        {
+          "title": "Lab Safety Progress Check",
+          "due": "2026-09-14",
+          "score": 4
+        },
+        {
+          "title": "pg.17 Initial Model Based Explanation",
+          "due": "2026-09-14",
+          "score": 4
+        },
+        {
+          "title": "Health Test Helping a Friend",
+          "due": "2026-09-09",
+          "score": 4
+        }
+      ],
+      "upcoming": [],
+      "lastUpdated": "2026-09-22"
+    },
+    {
+      "id": "avid",
+      "period": "5",
+      "course": "AVID 7A",
+      "teacher": "Aldana",
+      "room": "16",
+      "avg": 3.9,
+      "mark": "A",
+      "quarter": "1",
+      "topic": "not published",
+      "recent": [],
+      "upcoming": [],
+      "lastUpdated": "2026-09-22"
+    },
+    {
+      "id": "ela",
+      "period": "6",
+      "course": "Eng/Lang Arts 7",
+      "teacher": "Tarapore",
+      "room": "25",
+      "avg": 3.8,
+      "mark": "A",
+      "formative": 3.46,
+      "quarter": "1",
+      "topic": "Grammar — compound subjects and predicates, after finishing the StudySync short story “The Wise Old Woman”.",
+      "recent": [
+        {
+          "title": "[PC] Compound Subjects and Predicates",
+          "due": "2026-09-18",
+          "score": 2.4
+        },
+        {
+          "title": "[SA] Wise Old Woman Test",
+          "due": "2026-09-17",
+          "score": 4
+        },
+        {
+          "title": "Summary outline",
+          "due": "2026-09-16",
+          "score": 4
+        },
+        {
+          "title": "Wise Old Woman story+notes",
+          "due": "2026-09-14",
+          "score": 4
+        },
+        {
+          "title": "[PC] Complete Subjects and Predicates",
+          "due": "2026-09-11",
+          "score": 3.2
+        }
+      ],
+      "upcoming": [],
+      "lastUpdated": "2026-09-22"
     }
   ],
   "mathLevels": [

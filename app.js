@@ -16,7 +16,7 @@ const sections = [
  {id:'math',name:'Math',desc:'Small steps. Stronger skills.',meta:'5-question warm-up'},
  {id:'basketball',name:'Basketball',desc:'Put in the work. Find your game.',meta:'Your practice plan'},
  {id:'travel',name:'Travel',desc:'A little planning. A new adventure.',meta:'Explore & get ready'},
- {id:'school',name:'School',desc:'Clear your mind. Plan your day.',meta:'Your daily checklist'}
+ {id:'school',name:'School',desc:'Clear your mind. Plan your day.',meta:'Grade 7 classes'}
 ];
 let state = {}; let storageOK = true;
 try { const saved=JSON.parse(localStorage.getItem('madison-hub-v1') || '{}'); if(saved && typeof saved==='object' && !Array.isArray(saved)) state=saved; } catch { storageOK=false; }
@@ -270,6 +270,50 @@ function acesSkills(){
  return '<section class="panel" aria-labelledby="aces-skills-heading"><div class="eyebrow">LEARN. PRACTICE. GROW.</div><h2 id="aces-skills-heading">VFW Aces Skills</h2><p>Drills from your team, ready for your next practice.</p><div class="two-col">'+drills.map(d=>'<article class="panel"><div class="eyebrow">'+escapeHTML(d.category)+'</div><h3>'+escapeHTML(d.title)+'</h3>'+(d.detail?'<p>'+escapeHTML(d.detail)+'</p>':'')+'<a class="primary" href="'+escapeHTML(d.url)+'" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></article>').join('')+'</div><p class="note">Drills selected from the Aces Skills page. Links open the original creators’ YouTube videos; the driving-angle video starts at the matching section of a longer lesson. No Instagram account needed.</p></section>';
 }
 
+function periodLabel(period){
+ const value=String(period??'').trim();
+ return /^\d+$/.test(value)?'P'+value:value;
+}
+function pointsLabel(value){
+ const n=Number(value);
+ return Number.isFinite(n)?String(n):String(value);
+}
+function classGrade(item){
+ const parts=[];
+ if(item.avg!=null&&item.avg!=='')parts.push(Number(item.avg).toFixed(1));
+ if(item.mark)parts.push(String(item.mark));
+ return parts.join(' ');
+}
+function assignmentList(items,emptyLabel){
+ const list=Array.isArray(items)?items:[];
+ if(!list.length)return `<p class="class-empty">${escapeHTML(emptyLabel)}</p>`;
+ return `<ul class="assignment-list">${list.map(item=>{
+  const when=item.due?`<time datetime="${escapeHTML(item.due)}">${escapeHTML(/^\d{4}-\d{2}-\d{2}$/.test(item.due)?calendarDate(item.due):String(item.due))}</time>`:'';
+  const score=item.score==null||item.score===''?'':`<span class="assignment-score">${escapeHTML(pointsLabel(item.score))}</span>`;
+  return `<li class="assignment-row"><span><strong>${escapeHTML(item.title||'Assignment')}</strong>${when}</span>${score}</li>`;
+ }).join('')}</ul>`;
+}
+function schoolRoster(){
+ const classes=Array.isArray(content.classes)?content.classes:[];
+ if(!classes.length)return '';
+ const meta=content.schoolMeta||{};
+ const asOf=/^\d{4}-\d{2}-\d{2}$/.test(meta.asOf||'')?calendarDate(meta.asOf):'';
+ const sourceBits=[meta.source,meta.note].filter(Boolean).map(value=>escapeHTML(value));
+ const cards=classes.map(item=>{
+  const published=item.topic&&String(item.topic).trim().toLowerCase()!=='not published';
+  const grade=classGrade(item);
+  const quarter=item.quarter?`<span>Q${escapeHTML(String(item.quarter))}</span>`:'';
+  const gradeHtml=grade?`<p class="class-mark">${quarter}${escapeHTML(grade)}</p>`:`<p class="class-mark class-mark-empty">No average</p>`;
+  const formative=item.formative!=null&&item.formative!==''?`<p class="class-formative">Formative ~${escapeHTML(pointsLabel(item.formative))}</p>`:'';
+  const updated=published&&/^\d{4}-\d{2}-\d{2}$/.test(item.lastUpdated||'')?`Last updated ${calendarDate(item.lastUpdated)}.`:'Last updated from Weekly Progress 2026-09-21.';
+  const practice=item.id==='math'?'<a class="text-button" href="#math">Practice this topic in Math</a>':'';
+  return `<article class="panel class-card" id="class-${escapeHTML(item.id||'class')}"><div class="class-card-top"><div><div class="eyebrow">${escapeHTML(periodLabel(item.period))}</div><h2>${escapeHTML(item.course||'Class')}</h2><p class="class-teacher">${escapeHTML([item.teacher,item.room].filter(Boolean).join(' · '))}</p></div><div class="class-grade">${gradeHtml}${formative}</div></div><p class="class-topic"><span class="class-label">Current topic</span> ${published?escapeHTML(item.topic):'<span class="muted">not published</span>'}</p>${practice}<h3>Recent</h3>${assignmentList(item.recent,'None listed in this update.')}<h3>Upcoming</h3>${assignmentList(item.upcoming,'not published')}<p class="note">${escapeHTML(updated)}</p></article>`;
+ }).join('');
+ return `<section class="class-roster" aria-labelledby="class-roster-heading"><div class="section-heading"><h2 id="class-roster-heading">Beacon Park · Grade 7</h2>${asOf?`<span>As of ${escapeHTML(asOf)}</span>`:''}</div>${sourceBits.length?`<p class="roster-source">${sourceBits.join(' ')}</p>`:''}<div class="class-grid">${cards}</div></section>`;
+}
+function schoolPage(){
+ return intro('SCHOOL','A clear plan. A fresh start.','Beacon Park Grade 7 is here, then the little things that keep the day moving.')+schoolRoster()+`<div class="two-col"><section class="panel"><h2>Your daily checklist</h2>${checklist('school',content.school||[])}</section><aside class="panel school"><div class="eyebrow">ONE THING AT A TIME</div><h2>Make a little focus space.</h2><p>Choose one task, clear a spot, and put distractions aside. Take a short break when you finish.</p><a class="primary" href="#math">Try the math warm-up ↗</a></aside></div>`;
+}
 function render(){const route=location.hash.slice(1);const active=sections.some(s=>s.id===route)?route:'home';document.title=`${active==='home'?'Home':sections.find(s=>s.id===active).name} · Madison Hub`;
  document.querySelector('#nav').innerHTML=[{id:'home',name:'Home'},...sections].map(s=>`<a class="nav-link" href="#${s.id}" ${s.id===active?'aria-current="page"':''}>${icon(s.id)}<span>${s.name}</span></a>`).join('');
  if(active==='home') main.innerHTML=home();
@@ -277,7 +321,7 @@ function render(){const route=location.hash.slice(1);const active=sections.some(
  if(active==='math'){startQuiz();main.innerHTML=math();bindMath();drawQuiz();}
  if(active==='basketball')main.innerHTML=intro('BASKETBALL','Your next game. Your next rep.','Keep your team schedule and your practice plan together.')+teamSchedule()+acesSkills()+`<div class="two-col"><section class="panel"><h2>Today’s practice <span class="muted">· 15 min</span></h2>${checklist('basketball',content.basketball)}</section><aside class="panel basketball"><div class="eyebrow">YOUR FOCUS</div><h2>Control before speed.</h2><p>Stay balanced. Keep your eyes up. Make each rep intentional.</p><p class="note">Start with your usual warm-up. Take water breaks and follow your coach’s guidance.</p></aside></div>`;
  if(active==='travel')main.innerHTML=travelPage();
- if(active==='school')main.innerHTML=intro('SCHOOL','A clear plan. A fresh start.','Keep the little things together, so you can focus on what’s next.')+`<div class="two-col"><section class="panel"><h2>Your daily checklist</h2>${checklist('school',content.school)}</section><aside class="panel school"><div class="eyebrow">ONE THING AT A TIME</div><h2>Make a little focus space.</h2><p>Choose one task, clear a spot, and put distractions aside. Take a short break when you finish.</p><a class="primary" href="#math">Try the math warm-up ↗</a></aside></div>`;
+ if(active==='school')main.innerHTML=schoolPage();
  if(['school','travel','basketball'].includes(active)){main.insertAdjacentHTML('beforeend',`<p class="note">Checkmarks are saved on this device. Use Reset checklist when you want a fresh start.</p>`);}
  main.insertAdjacentHTML('beforeend',`<p id="storage-warning" class="storage-warning" ${storageOK?'hidden':''}>This browser can’t save progress right now. You can still use the hub during this visit.</p>`);
  if(active==='travel')bindTravel();

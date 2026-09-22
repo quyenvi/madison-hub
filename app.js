@@ -201,19 +201,38 @@ function validSchedule(raw){
  return {format:raw.format,version:1,source:typeof raw.source==='string'?raw.source.slice(0,100):'Team calendar',timezone:'America/Los_Angeles',exportedAt:raw.exportedAt,coverageStart:raw.coverageStart,coverageEnd:raw.coverageEnd,events};
 }
 function calendarDate(date){return new Date(date+'T12:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});}
+function scheduleEvents(){
+ const today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ const through=new Date(today+'T12:00:00Z');through.setUTCFullYear(through.getUTCFullYear()+1);
+ const weekly=window.OCR_WEEKLY_SCHEDULE.eventsBetween(window.OCR_WEEKLY_SCHEDULE.startDate,through.toISOString().slice(0,10)).map(e=>({
+  id:e.id,date:e.date,endDate:e.endDate,team:'OCR Pink',title:e.title,startTime:e.startTime,
+  details:e.time+' · '+e.venue+'\n'+e.note
+ }));
+ // Keep the imported snapshot intact; show each matching weekly session only once.
+ const key=e=>{
+  let team=e.team.toLowerCase().replace(/[^a-z0-9]/g,'');
+  if(['ocr','ocrpink','ocrhythm','ocrhythmpink','ocrhythm7pink'].includes(team))team='ocrpink';
+  let title=e.title.toLowerCase().replace(/ocr\s*pink|oc\s*rhythm(?:\s*(?:7\s*)?pink)?/g,'').replace(/[^a-z0-9]/g,'');
+  if(title==='academy')title='basketballacademy';
+  return e.date+'|'+team+'|'+title;
+ };
+ const weeklyKeys=new Set(weekly.map(key));
+ return [...(state.teamSchedule?.events||[]).filter(e=>!weeklyKeys.has(key(e))),...weekly];
+}
 function teamSchedule(){
  const schedule=state.teamSchedule;
- const teams=schedule?[...new Set(schedule.events.map(e=>e.team))].sort():[];
+ const teams=[...new Set(scheduleEvents().map(e=>e.team))].sort();
  if(!teams.includes(scheduleTeam))scheduleTeam='all';
- return '<section class="panel team-schedule" aria-labelledby="schedule-title"><div class="section-heading"><h2 id="schedule-title">Team schedule</h2><label class="small-button schedule-upload" for="schedule-file">Import schedule<input id="schedule-file" type="file" accept=".json,application/json"></label></div><p class="note">Schedule files stay in this browser on this device. Importing a new file replaces the saved schedule. Updates are not automatic.</p><p id="schedule-message" role="status"></p>'+
- (schedule?'<p class="note">'+escapeHTML(schedule.source)+' · Snapshot from '+calendarDate(schedule.exportedAt.slice(0,10))+'<br>Coverage: '+calendarDate(schedule.coverageStart)+' – '+calendarDate(schedule.coverageEnd)+' · All event times Pacific</p><div class="schedule-filters"><label>Team<select id="schedule-team"><option value="all">All teams</option>'+teams.map(team=>'<option '+(team===scheduleTeam?'selected ':'')+'value="'+escapeHTML(team)+'">'+escapeHTML(team)+'</option>').join('')+'</select></label><label>Show<select id="schedule-view"><option value="upcoming" '+(scheduleView==='upcoming'?'selected':'')+'>Upcoming</option><option value="all" '+(scheduleView==='all'?'selected':'')+'>All imported events</option></select></label></div><div id="schedule-events"></div>':'<p>No schedule imported yet. Choose a schedule file to see practices, games, and tournaments here.</p>')+
+ return '<section class="panel team-schedule" aria-labelledby="schedule-title"><div class="section-heading"><h2 id="schedule-title">Team schedule</h2><label class="small-button schedule-upload" for="schedule-file">Import schedule<input id="schedule-file" type="file" accept=".json,application/json"></label></div><p class="note">OCR Pink weekly sessions are included. Import a schedule to add games and other team events. Importing a new file replaces the previous imported schedule on this device.</p><p id="schedule-message" role="status"></p><p class="note">All event times Pacific</p>'+
+ (schedule?'<p class="note">'+escapeHTML(schedule.source)+' · Imported snapshot from '+calendarDate(schedule.exportedAt.slice(0,10))+'<br>Imported coverage: '+calendarDate(schedule.coverageStart)+' – '+calendarDate(schedule.coverageEnd)+'</p>':'')+
+ '<div class="schedule-filters"><label>Team<select id="schedule-team"><option value="all">All teams</option>'+teams.map(team=>'<option '+(team===scheduleTeam?'selected ':'')+'value="'+escapeHTML(team)+'">'+escapeHTML(team)+'</option>').join('')+'</select></label><label>Show<select id="schedule-view"><option value="upcoming" '+(scheduleView==='upcoming'?'selected':'')+'>Upcoming</option><option value="all" '+(scheduleView==='all'?'selected':'')+'>All events</option></select></label></div><div id="schedule-events"></div>'+
  '<p class="note">Confirm changes with your team. <a class="text-button" href="https://madison27.tomongo.chatgpt.site/#schedule" target="_blank" rel="noopener noreferrer">Open original calendar (sign-in required)</a></p></section>';
 }
 function drawSchedule(){
  const target=document.querySelector('#schedule-events');if(!target)return;
  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
- const events=state.teamSchedule.events.filter(e=>(scheduleTeam==='all'||e.team===scheduleTeam)&&(scheduleView==='all'||e.endDate>=today)).sort((a,b)=>a.date.localeCompare(b.date)||a.team.localeCompare(b.team));
- target.innerHTML=events.length?events.map(e=>'<article class="schedule-event"><div class="eyebrow">'+escapeHTML(e.team)+'</div><h3>'+escapeHTML(e.title)+'</h3><p><strong>'+calendarDate(e.date)+(e.endDate!==e.date?' – '+calendarDate(e.endDate):'')+'</strong></p><p class="trip-notes">'+escapeHTML(e.details)+'</p></article>').join(''):'<p class="note">No events match this view in your imported snapshot. Choose All imported events or import a newer schedule.</p>';
+ const events=scheduleEvents().filter(e=>(scheduleTeam==='all'||e.team===scheduleTeam)&&(scheduleView==='all'||e.endDate>=today)).sort((a,b)=>a.date.localeCompare(b.date)||(a.startTime||'').localeCompare(b.startTime||'')||a.team.localeCompare(b.team));
+ target.innerHTML=events.length?events.map(e=>'<article class="schedule-event"><div class="eyebrow">'+escapeHTML(e.team)+'</div><h3>'+escapeHTML(e.title)+'</h3><p><strong>'+calendarDate(e.date)+(e.endDate!==e.date?' – '+calendarDate(e.endDate):'')+'</strong></p><p class="trip-notes">'+escapeHTML(e.details)+'</p></article>').join(''):'<p class="note">No events match this view. Choose another team, show all events, or import a newer schedule.</p>';
 }
 function bindSchedule(){
  drawSchedule();
@@ -271,4 +290,3 @@ let offlineReady=false;
 function connection(){document.querySelector('#connection').textContent=!navigator.onLine?(offlineReady?'Offline · ready to use':'You’re offline'):(offlineReady?'Ready offline':'Online');}
 window.addEventListener('online',connection);window.addEventListener('offline',connection);connection();
 if('serviceWorker' in navigator && window.isSecureContext){navigator.serviceWorker.register('./sw.js').then(async registration=>{await navigator.serviceWorker.ready;offlineReady=true;connection();registration.update().catch(()=>{});}).catch(()=>{document.querySelector('#connection').textContent='Online only';});}
-

@@ -14,3 +14,47 @@
 .team-schedule{margin-bottom:24px}.schedule-upload{position:relative;display:inline-flex;align-items:center;cursor:pointer;overflow:hidden;flex-shrink:0}.schedule-upload input{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}.schedule-upload:focus-within{outline:3px solid #087fa3;outline-offset:3px}.schedule-filters{display:flex;gap:16px;margin:20px 0}.schedule-filters label{flex:1;min-width:0;font-weight:650}.schedule-filters select{display:block;width:100%;min-height:48px;border:1px solid #becad6;border-radius:10px;padding:10px;background:white;color:var(--ink);font:inherit;margin-top:8px}.schedule-event{padding:20px 0;border-bottom:1px solid var(--line)}.schedule-event:last-child{border:0}.schedule-event .eyebrow{margin-bottom:10px}.schedule-event p{margin-bottom:8px}.schedule-event h3{overflow-wrap:anywhere}#schedule-events{max-height:600px;overflow:auto}#schedule-message:empty{display:none}@media(max-width:450px){.team-schedule .section-heading,.schedule-filters{align-items:stretch;flex-direction:column}.schedule-upload{align-self:flex-start}}
 
 .ai{background:#dcecfb}.ai-roadmap{margin-bottom:24px}.ai-weeks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:24px}.ai-weeks button{text-align:left;line-height:1.5}.ai-weeks span{display:block;font-weight:400;font-size:.8rem}.ai-weeks [aria-pressed="true"]{background:#e0f4eb;border:2px solid #267556}.ai-lesson{max-width:850px}.ai-diagram{margin:24px 0;padding:20px;background:#edf4fc;border-radius:16px}.ai-diagram figcaption{font-size:.8rem;font-weight:700;margin-bottom:16px}.ai-diagram ol{display:flex;list-style:none;gap:24px;padding:0;margin:0}.ai-diagram li{flex:1;padding:16px 10px;background:white;border:1px solid #c4d6eb;border-radius:12px;text-align:center;position:relative;font-size:.9rem;line-height:1.5}.ai-diagram li+li:before{content:'→';position:absolute;left:-21px;top:35%;color:#34556f}.ai-word{padding:16px;background:#f4f1fc;border-radius:12px}.ai-check{border:0;padding:0;margin:24px 0 12px}.ai-check legend{font-weight:700;margin-bottom:12px;line-height:1.5}.ai-check button{display:block;text-align:left;width:100%;margin-bottom:8px;white-space:normal}#ai-feedback{line-height:1.6}.ai-lesson .check-row{margin-bottom:20px}select:focus-visible{outline:3px solid #087fa3;outline-offset:3px}@media(max-width:700px){.ai-weeks{grid-template-columns:repeat(2,minmax(0,1fr))}.ai-diagram ol{flex-direction:column}.ai-diagram li+li:before{content:'↓';top:-25px;left:48%}.nav-link{min-width:0;font-size:.6rem}}
+
+/* Monday–Sunday calendar. Each day remains visible when it has no events. */
+.week-control{display:flex;align-items:center;gap:12px;min-width:0}
+.week-control h3{font-family:inherit;font-size:18px;font-weight:700;line-height:1.4;margin:0;text-align:center;min-width:225px}
+.week-control button{width:44px;height:44px;flex:none}
+.weekly-grid{display:grid;grid-template-columns:minmax(0,1fr);border-top:1px solid var(--line);gap:0}
+.weekly-day{min-width:0;padding:16px;border-bottom:1px solid var(--line);background:#fff}
+.weekly-day>h4{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px;font-family:inherit;font-size:16px;font-weight:700;line-height:1.4;margin:0 0 12px}
+.weekly-day>h4>span{font-size:16px;font-weight:700}
+.weekly-day>h4>time{display:block;font-size:14px;font-weight:500;line-height:1.5;color:var(--muted)}
+.weekly-day.is-today{background:#fff7fb;box-shadow:inset 0 3px #d82d7d}
+.weekly-day.is-today>h4>time{color:#ac1e60;font-weight:700}
+.weekly-day-events{display:grid;gap:12px;align-content:start}
+.weekly-event{min-width:0;padding:12px;border:1px solid var(--line);border-left:3px solid var(--event-color,#b76a28);border-radius:7px;background:var(--badge-color,#fff8f0);overflow-wrap:break-word}
+.weekly-team{display:block;font-size:14px;font-weight:700;line-height:1.4;margin-bottom:7px}
+.weekly-event h5,.weekly-event h3{font-family:inherit;font-size:16px;font-weight:700;line-height:1.4;font-size:16px;line-height:1.4;font-weight:700;margin:0 0 8px}
+.weekly-event p{font-size:14px;line-height:1.5;margin:6px 0 0;overflow-wrap:anywhere}
+.weekly-event .weekly-time{font-weight:700}
+.weekly-event .venue-directions{display:inline-block;font-size:14px;margin-top:8px}
+.weekly-details{margin-top:10px;font-size:14px;line-height:1.5}
+.weekly-details summary{cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.weekly-empty{font-size:14px;line-height:1.5;color:var(--muted);margin:0}
+@media(min-width:1200px){
+ .weekly-grid{grid-template-columns:repeat(7,minmax(0,1fr))}
+ .weekly-day{padding:12px;border-bottom:0;border-right:1px solid var(--line);min-height:240px}
+ .weekly-day:last-child{border-right:0}
+ .weekly-day>h4{display:block}
+ .weekly-day>h4>time{margin-top:5px}
+ .weekly-event{padding:10px}
+}
+@media(max-width:600px){
+ .week-control{justify-content:space-between;width:100%;gap:6px}
+ .week-control h3{font-size:16px;min-width:0}
+}
+
+.hub-week-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:24px 0 18px}
+.team-schedule{min-width:0}
+.team-schedule .schedule-filters{align-items:end;justify-content:space-between}
+.team-schedule .schedule-filters label{max-width:280px}
+.team-schedule .schedule-filters .note{margin:0 0 8px}
+#schedule-events.weekly-grid{max-height:none;overflow:visible;border:1px solid var(--line);border-radius:10px}
+.team-schedule .weekly-day:first-child{border-radius:10px 10px 0 0}
+.team-schedule .weekly-day:last-child{border-bottom:0}
+@media(max-width:600px){.hub-week-toolbar{flex-wrap:wrap}.hub-week-toolbar>#schedule-this-week{margin-left:auto}.team-schedule{padding:18px}.team-schedule .schedule-filters{align-items:stretch;flex-direction:column}.team-schedule .schedule-filters label{max-width:none}}

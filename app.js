@@ -3,6 +3,7 @@ const content = window.HUB_CONTENT;
 const main = document.querySelector('#main');
 const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const paths = {
+ ela:'M3 4h7l2 2 2-2h7v15h-7l-2 2-2-2H3z M12 6v15 M6 8h3 M15 8h3 M6 12h3 M15 12h3',
  ai:'M9 3h6v3h3v12H6V6h3z M9 10h.01 M15 10h.01 M9 14h6 M3 9v6 M21 9v6 M9 18v3 M15 18v3',
  home:'M3 10 12 3l9 7v10H3z M9 20v-7h6v7',
  math:'M5 4h14v16H5z M8 8h8 M8 12h2 M14 12h2 M8 16h2 M14 16h2',
@@ -13,6 +14,7 @@ const paths = {
 const icon = name => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[name]}"/></svg>`;
 const sections = [
  {id:'ai',name:'AI',desc:'Explore how AI works.',meta:'Eight weekly lessons'},
+ {id:'ela',name:'ELA',desc:'Read closely. Write clearly.',meta:'5-question practice'},
  {id:'math',name:'Math',desc:'Small steps. Stronger skills.',meta:'5-question warm-up'},
  {id:'basketball',name:'Basketball',desc:'Put in the work. Find your game.',meta:'Your practice plan'},
  {id:'travel',name:'Travel',desc:'A little planning. A new adventure.',meta:'Explore & get ready'},
@@ -317,6 +319,7 @@ function schoolPage(){
 function render(){const route=location.hash.slice(1);const active=sections.some(s=>s.id===route)?route:'home';document.title=`${active==='home'?'Home':sections.find(s=>s.id===active).name} · Madison Hub`;
  document.querySelector('#nav').innerHTML=[{id:'home',name:'Home'},...sections].map(s=>`<a class="nav-link" href="#${s.id}" ${s.id===active?'aria-current="page"':''}>${icon(s.id)}<span>${s.name}</span></a>`).join('');
  if(active==='home') main.innerHTML=home();
+ if(active==='ela'){main.innerHTML=elaPage();bindELA();}
  if(active==='ai'){main.innerHTML=aiPage();bindAI();}
  if(active==='math'){startQuiz();main.innerHTML=math();bindMath();drawQuiz();}
  if(active==='basketball')main.innerHTML=intro('BASKETBALL','Your next game. Your next rep.','Keep your team schedule and your practice plan together.')+teamSchedule()+acesSkills()+`<div class="two-col"><section class="panel"><h2>Today’s practice <span class="muted">· 15 min</span></h2>${checklist('basketball',content.basketball)}</section><aside class="panel basketball"><div class="eyebrow">YOUR FOCUS</div><h2>Control before speed.</h2><p>Stay balanced. Keep your eyes up. Make each rep intentional.</p><p class="note">Start with your usual warm-up. Take water breaks and follow your coach’s guidance.</p></aside></div>`;

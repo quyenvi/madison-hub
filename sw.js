@@ -1,5 +1,5 @@
 /* Increment VERSION whenever you change any app file, including content.js. */
-const VERSION = 'v15-ela-practice';
+const VERSION = 'v16-ela-feedback';
 const PREFIX = 'madison-hub-' + self.registration.scope;
 const CACHE = PREFIX + VERSION;
 const APP = ['./','./index.html','./styles.css','./content.js','./weekly-calendar.js','./ocr-weekly.js','./app.js','./ela.js','./ai.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./maskable-512.png','./apple-touch-icon.png'];

@@ -1,8 +1,8 @@
 /* Increment VERSION whenever you change any app file, including content.js. */
-const VERSION = 'v16-ela-feedback';
+const VERSION = 'v17-fruit-swipe';
 const PREFIX = 'madison-hub-' + self.registration.scope;
 const CACHE = PREFIX + VERSION;
-const APP = ['./','./index.html','./styles.css','./content.js','./weekly-calendar.js','./ocr-weekly.js','./app.js','./ela.js','./ai.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./maskable-512.png','./apple-touch-icon.png'];
+const APP = ['./','./index.html','./styles.css','./content.js','./weekly-calendar.js','./ocr-weekly.js','./app.js','./fruit.js','./ela.js','./ai.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./maskable-512.png','./apple-touch-icon.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache=>Promise.all(APP.map(async path => { const url = new URL(path, self.registration.scope); url.searchParams.set('release', VERSION); const response = await fetch(url, {cache:'reload'}); if(!response.ok) throw new Error('App download failed'); await cache.put(new URL(path, self.registration.scope), response); }))));
   // Let existing app windows finish on their current version. Close all windows to update.

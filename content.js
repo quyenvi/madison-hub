@@ -91,9 +91,9 @@ window.HUB_CONTENT = {
     }
   ],
   "schoolMeta": {
-    "asOf": "2026-09-22",
-    "source": "Aeries + Weekly Progress 2026-09-21",
-    "note": "Upcoming work only when published in Aeries/Canvas."
+    "asOf": "2026-09-27",
+    "source": "Weekly Progress 2026-09-21 (Aeries session unavailable this run)",
+    "note": "Upcoming work only when published in Aeries/Canvas. Next Weekly Progress expected ~Mon 2026-09-28 midnight PT."
   },
   "classes": [
     {
@@ -108,13 +108,13 @@ window.HUB_CONTENT = {
       "topic": "not published",
       "recent": [
         {
-          "title": "Weekly grade (week of 9/8–9/11)",
+          "title": "Weekly grade (week of 9/8\u20139/11)",
           "due": "2026-09-11",
           "score": 3
         }
       ],
       "upcoming": [],
-      "lastUpdated": "2026-09-22"
+      "lastUpdated": "2026-09-27"
     },
     {
       "id": "world-history",
@@ -128,7 +128,7 @@ window.HUB_CONTENT = {
       "topic": "not published",
       "recent": [],
       "upcoming": [],
-      "lastUpdated": "2026-09-22"
+      "lastUpdated": "2026-09-27"
     },
     {
       "id": "advisement",
@@ -139,7 +139,7 @@ window.HUB_CONTENT = {
       "topic": "not published",
       "recent": [],
       "upcoming": [],
-      "lastUpdated": "2026-09-22"
+      "lastUpdated": "2026-09-27"
     },
     {
       "id": "math",
@@ -150,10 +150,10 @@ window.HUB_CONTENT = {
       "avg": 3.6,
       "mark": "A-",
       "quarter": "1",
-      "topic": "LT 1.4–1.6 signed fractions. LTQ #2 is Tuesday, September 22, 2026. Extra Practice Packet through page 13.",
+      "topic": "LT 1.4\u20131.6 signed fractions. LTQ #2 was Tuesday, September 22, 2026. Extra Practice Packet through page 13 (no newer unit published).",
       "recent": [],
       "upcoming": [],
-      "lastUpdated": "2026-09-22"
+      "lastUpdated": "2026-09-27"
     },
     {
       "id": "science",
@@ -164,7 +164,7 @@ window.HUB_CONTENT = {
       "avg": 4.0,
       "mark": "A",
       "quarter": "1",
-      "topic": "Lab safety / initial model-based explanation / health unit wrap from recent scores.",
+      "topic": "Lab safety / initial model-based explanation / health unit wrap from recent scores (no newer unit published).",
       "recent": [
         {
           "title": "Lab Safety Progress Check",
@@ -183,7 +183,7 @@ window.HUB_CONTENT = {
         }
       ],
       "upcoming": [],
-      "lastUpdated": "2026-09-22"
+      "lastUpdated": "2026-09-27"
     },
     {
       "id": "avid",
@@ -197,7 +197,7 @@ window.HUB_CONTENT = {
       "topic": "not published",
       "recent": [],
       "upcoming": [],
-      "lastUpdated": "2026-09-22"
+      "lastUpdated": "2026-09-27"
     },
     {
       "id": "ela",
@@ -209,7 +209,7 @@ window.HUB_CONTENT = {
       "mark": "A",
       "formative": 3.46,
       "quarter": "1",
-      "topic": "Grammar — compound subjects and predicates, after finishing the StudySync short story “The Wise Old Woman”.",
+      "topic": "Grammar \u2014 compound subjects and predicates, after finishing the StudySync short story \u201cThe Wise Old Woman\u201d (no newer unit published).",
       "recent": [
         {
           "title": "[PC] Compound Subjects and Predicates",
@@ -238,7 +238,7 @@ window.HUB_CONTENT = {
         }
       ],
       "upcoming": [],
-      "lastUpdated": "2026-09-22"
+      "lastUpdated": "2026-09-27"
     }
   ],
   "mathLevels": [

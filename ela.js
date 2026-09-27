@@ -412,6 +412,208 @@ const elaLevels = [
     ]
   }
 ];
+elaLevels.unshift({
+  "id": "compounds",
+  "name": "Focus · Compound subjects & predicates",
+  "description": "This week’s focus: find who or what the sentence is about, then find what they do. 15 focused questions, five at a time.",
+  "questions": [
+    {
+      "topic": "Compound subjects",
+      "question": "Identify the compound subject: “Maya and Leo packed their bags.”",
+      "choices": [
+        "Maya and Leo",
+        "packed their bags",
+        "their bags",
+        "Maya and packed"
+      ],
+      "answer": 0,
+      "explanation": "Ask who packed: Maya and Leo. Two subjects share the same verb, packed.",
+      "passage": ""
+    },
+    {
+      "topic": "Compound subjects",
+      "question": "Which sentence has a compound subject?",
+      "choices": [
+        "The coach smiled and waved.",
+        "The coach and the captain smiled.",
+        "The coach carried balls and cones.",
+        "The coach smiled warmly."
+      ],
+      "answer": 1,
+      "explanation": "Coach and captain both do the smiling. Two actions or two objects do not make a compound subject.",
+      "passage": ""
+    },
+    {
+      "topic": "Compound subjects",
+      "question": "Identify the compound subject: “The rain and the wind delayed practice.”",
+      "choices": [
+        "delayed practice",
+        "The rain",
+        "The rain and the wind",
+        "practice"
+      ],
+      "answer": 2,
+      "explanation": "Both rain and wind are what delayed practice. A subject can name things, not just people.",
+      "passage": ""
+    },
+    {
+      "topic": "Compound subjects",
+      "question": "Which combines the sentences using a compound subject? “Nia reads. Ava reads.”",
+      "choices": [
+        "Nia reads and writes.",
+        "Nia reads, and Ava writes.",
+        "Nia reads to Ava.",
+        "Nia and Ava read."
+      ],
+      "answer": 3,
+      "explanation": "Nia and Ava share one predicate, read. The other choices change the meaning or do not combine the subjects.",
+      "passage": ""
+    },
+    {
+      "topic": "Compound subjects",
+      "question": "Identify the compound subject: “Either Sam or Alex will lead the warm-up.”",
+      "choices": [
+        "Sam or Alex",
+        "will lead",
+        "the warm-up",
+        "Either will lead"
+      ],
+      "answer": 0,
+      "explanation": "The subjects Sam and Alex are joined by or. Compound subjects can use or as well as and.",
+      "passage": ""
+    },
+    {
+      "topic": "Compound predicates",
+      "question": "Identify the compound predicate: “Madison dribbled downcourt and passed to Nia.”",
+      "choices": [
+        "Madison and Nia",
+        "dribbled downcourt and passed to Nia",
+        "downcourt and Nia",
+        "Madison dribbled"
+      ],
+      "answer": 1,
+      "explanation": "One subject, Madison, does two actions: dribbled and passed. The compound predicate includes both actions and their details.",
+      "passage": ""
+    },
+    {
+      "topic": "Compound predicates",
+      "question": "Which sentence has a compound predicate?",
+      "choices": [
+        "Leo and Ava opened their notebooks.",
+        "Leo carried a notebook and a pencil.",
+        "Leo opened his notebook and wrote a sentence.",
+        "Leo opened his notebook."
+      ],
+      "answer": 2,
+      "explanation": "Leo is the shared subject of opened and wrote. The two verbs form a compound predicate.",
+      "passage": ""
+    },
+    {
+      "topic": "Compound predicates",
+      "question": "Which combines the sentences using a compound predicate? “The team warmed up. The team practiced free throws.”",
+      "choices": [
+        "The team and the coach warmed up.",
+        "The team practiced warm free throws.",
+        "The team warmed up, and the coach practiced.",
+        "The team warmed up and practiced free throws."
+      ],
+      "answer": 3,
+      "explanation": "The team is stated once and does both actions: warmed up and practiced.",
+      "passage": ""
+    },
+    {
+      "topic": "Compound predicates",
+      "question": "Identify the two verbs in the compound predicate: “Ava checked her work and corrected a mistake.”",
+      "choices": [
+        "checked and corrected",
+        "Ava and work",
+        "work and mistake",
+        "checked and mistake"
+      ],
+      "answer": 0,
+      "explanation": "Checked and corrected both tell what Ava did. Work and mistake are nouns, not the actions.",
+      "passage": ""
+    },
+    {
+      "topic": "Compound predicates",
+      "question": "Which sentence has one subject and two actions?",
+      "choices": [
+        "The dog and the cat slept.",
+        "The dog barked and chased the ball.",
+        "The dog saw a ball and a stick.",
+        "The dog barked, and the cat hid."
+      ],
+      "answer": 1,
+      "explanation": "The dog is the single subject of barked and chased. The last choice has two separate subject–predicate pairs.",
+      "passage": ""
+    },
+    {
+      "topic": "Tell them apart",
+      "question": "“Maya and Leo packed and checked their bags.” What does this sentence contain?",
+      "choices": [
+        "Only a compound subject",
+        "Only a compound predicate",
+        "Both a compound subject and a compound predicate",
+        "Neither"
+      ],
+      "answer": 2,
+      "explanation": "Maya and Leo are the two subjects. Packed and checked are two actions shared by both subjects.",
+      "passage": ""
+    },
+    {
+      "topic": "Tell them apart",
+      "question": "“Nia bought apples and oranges.” Does this sentence have a compound subject or compound predicate?",
+      "choices": [
+        "A compound subject: apples and oranges",
+        "A compound predicate: apples and oranges",
+        "Both",
+        "Neither; apples and oranges are objects"
+      ],
+      "answer": 3,
+      "explanation": "Nia is the one subject, and bought is the one verb. Apples and oranges name what she bought. The word and alone is not enough.",
+      "passage": ""
+    },
+    {
+      "topic": "Tell them apart",
+      "question": "Which is a compound sentence rather than one subject with a compound predicate?",
+      "choices": [
+        "Maya read, and Leo sketched.",
+        "Maya read and sketched.",
+        "Maya and Leo read.",
+        "Maya read a book and a magazine."
+      ],
+      "answer": 0,
+      "explanation": "Maya read and Leo sketched can each stand alone. Each clause has its own subject and predicate.",
+      "passage": ""
+    },
+    {
+      "topic": "Tell them apart",
+      "question": "“The players on the bench cheered and clapped.” What is compound?",
+      "choices": [
+        "The subject: players and bench",
+        "The predicate: cheered and clapped",
+        "The subject: the players",
+        "Neither"
+      ],
+      "answer": 1,
+      "explanation": "Players is the subject; on the bench describes which players. Cheered and clapped are the two actions. A plural subject is not automatically compound.",
+      "passage": ""
+    },
+    {
+      "topic": "Tell them apart",
+      "question": "Which sentence has BOTH a compound subject and a compound predicate?",
+      "choices": [
+        "Ava planned the poster and drew the pictures.",
+        "Ava and Nia planned the poster.",
+        "Ava and Nia planned the poster and drew the pictures.",
+        "Ava planned, and Nia drew."
+      ],
+      "answer": 2,
+      "explanation": "Ava and Nia share both actions, planned and drew. In the last choice, each subject belongs to its own clause.",
+      "passage": ""
+    }
+  ]
+});
 let elaLevel='stretch',elaSet=[],elaIndex=0,elaScore=0,elaAnswered=false;
 const elaQueues={};
 function startELA(){
@@ -421,9 +623,9 @@ function startELA(){
 }
 function elaPage(){
  if(elaLevels.some(l=>l.id===state.elaLevel))elaLevel=state.elaLevel;
- return intro('ELA','Read closely. Write clearly.','Grade 7 practice, one small win at a time.')+`<div class="trip-toolbar ela-toolbar"><label for="ela-level">Practice level<select id="ela-level">${elaLevels.map(l=>`<option value="${l.id}" ${l.id===elaLevel?'selected':''}>${l.name}</option>`).join('')}</select></label><button class="small-button" id="ela-new">Start new set</button></div><p class="muted" id="ela-description">${escapeHTML(elaLevels.find(l=>l.id===elaLevel).description)}</p><p class="note">30 original questions across three levels. Five questions per set, with grammar, vocabulary, reading, and writing practice. These are practice materials, not teacher-assigned quiz questions. Starting a set or changing levels resets this score.</p><div class="two-col"><section class="panel" id="ela-quiz" aria-label="ELA practice"></section><aside class="panel"><h2>Find the evidence</h2><ol class="steps"><li>Read the full sentence or passage.</li><li>Look for words that support your answer.</li><li>Read the explanation, even when you get it right.</li></ol><p class="note">No timer. Your selected level stays on this device; scores last for the current set.</p></aside></div>`;
+ return intro('ELA','Read closely. Write clearly.','Grade 7 practice, one small win at a time.')+`<section class="panel team-schedule"><div class="eyebrow">WEEK OF SEPTEMBER 27, 2026</div><h2>Compound subjects &amp; predicates</h2><p><strong>Compound subject:</strong> two or more subjects share a predicate. <em>Maya and Leo</em> read.</p><p><strong>Compound predicate:</strong> one subject has two or more verbs. Maya <em>reads and writes</em>.</p><p class="note">First ask “Who or what?” Then ask “What do they do?” Watch out: two objects, like “books and pencils,” do not make a compound subject or predicate.</p><button class="primary" id="ela-compounds">Practice subjects &amp; predicates</button></section><div class="trip-toolbar ela-toolbar"><label for="ela-level">Practice level<select id="ela-level">${elaLevels.map(l=>`<option value="${l.id}" ${l.id===elaLevel?'selected':''}>${l.name}</option>`).join('')}</select></label><button class="small-button" id="ela-new">Start new set</button></div><p class="muted" id="ela-description">${escapeHTML(elaLevels.find(l=>l.id===elaLevel).description)}</p><p class="note">${elaLevels.reduce((n,l)=>n+l.questions.length,0)} original questions across ${elaLevels.length} practice options. Five questions per set, with grammar, vocabulary, reading, and writing practice. These are practice materials, not teacher-assigned quiz questions. Starting a set or changing levels resets this score.</p><div class="two-col"><section class="panel" id="ela-quiz" aria-label="ELA practice"></section><aside class="panel"><h2>Find the evidence</h2><ol class="steps"><li>Read the full sentence or passage.</li><li>Look for words that support your answer.</li><li>Read the explanation, even when you get it right.</li></ol><p class="note">No timer. Your selected level stays on this device; scores last for the current set.</p></aside></div>`;
 }
-function bindELA(){startELA();drawELA();document.querySelector('#ela-new').onclick=()=>{startELA();drawELA();};document.querySelector('#ela-level').onchange=e=>{elaLevel=e.target.value;state.elaLevel=elaLevel;save();document.querySelector('#ela-description').textContent=elaLevels.find(l=>l.id===elaLevel).description;startELA();drawELA();};}
+function bindELA(){document.querySelector('#ela-compounds').onclick=()=>{elaLevel='compounds';state.elaLevel=elaLevel;save();document.querySelector('#ela-level').value=elaLevel;document.querySelector('#ela-description').textContent=elaLevels.find(l=>l.id===elaLevel).description;startELA();drawELA();document.querySelector('#ela-quiz h2').focus();};startELA();drawELA();document.querySelector('#ela-new').onclick=()=>{startELA();drawELA();};document.querySelector('#ela-level').onchange=e=>{elaLevel=e.target.value;state.elaLevel=elaLevel;save();document.querySelector('#ela-description').textContent=elaLevels.find(l=>l.id===elaLevel).description;startELA();drawELA();};}
 function drawELA(){
  const target=document.querySelector('#ela-quiz');
  if(elaIndex===elaSet.length){target.innerHTML=`<div class="eyebrow">PRACTICE COMPLETE</div><h2 tabindex="-1">One set stronger.</h2><p>You got <strong>${elaScore} of ${elaSet.length}</strong> correct.</p><button class="primary" id="ela-restart">Try another set</button>`;document.querySelector('#ela-restart').onclick=()=>{startELA();drawELA();};return;}

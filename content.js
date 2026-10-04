@@ -76,8 +76,8 @@ window.HUB_CONTENT = {
     },
     {
       "id": "math-review",
-      "title": "Review fractions",
-      "detail": "Math · Try the practice set in your hub."
+      "title": "Math Unit 1 test this week",
+      "detail": "Review Mon–Wed Oct 5–7. Thu Oct 8 is Targets 1.1–1.5. Fri Oct 9 is Targets 1.6–1.9. Extra practice packet is due Fri Oct 9 and will not be accepted late. No tutorial (minimum days). Hub practice covers Targets 1.4–1.6 only: add, multiply, and divide positive and negative fractions."
     },
     {
       "id": "science",
@@ -92,20 +92,20 @@ window.HUB_CONTENT = {
   ],
   "schoolMeta": {
     "asOf": "2026-10-04",
-    "source": "ParentSquare Weekly Progress as of 2026-09-28 12:16 AM PT (Aeries: no parent session; login page only)",
-    "note": "Upcoming this/next week: not published beyond the 09/28–10/05 window in that email. Next Weekly Progress expected ~Mon 2026-10-05 midnight PT. Flags: World History Fall of Rome Vocab Quiz 2.0; ELA [PC] Compound Subjects and Predicates 2.4."
+    "source": "Marks are from a live Aeries check on 2026-10-04 morning (about 7:52 AM PT).",
+    "note": "Numeric averages still shown are from the Sep 28 Weekly Progress email. A newer average was not on the Aeries page."
   },
   "classes": [
     {
       "id": "pe",
       "period": "1",
       "course": "PE",
-      "teacher": "Handley",
+      "teacher": "Kevin Miller",
       "room": "Gym",
       "avg": 3.8,
       "mark": "A",
       "quarter": "1",
-      "topic": "Weekly participation grades (no unit title published).",
+      "topic": "Weekly participation grades. Live mark A. Gradebook teacher is Kevin Miller. No assignments after Sep 28. Last published average 3.8 is from the Sep 28 Weekly Progress email.",
       "recent": [
         {
           "title": "Week of 9/21 - 9/25",
@@ -124,7 +124,7 @@ window.HUB_CONTENT = {
         }
       ],
       "upcoming": [],
-      "lastUpdated": "2026-09-25"
+      "lastUpdated": "2026-10-04"
     },
     {
       "id": "world-history",
@@ -133,9 +133,9 @@ window.HUB_CONTENT = {
       "teacher": "Phan",
       "room": "P33",
       "avg": 3.3,
-      "mark": "B",
+      "mark": "C",
       "quarter": "1",
-      "topic": "Unit 1 — Fall of Rome (vocab quiz + notebook check).",
+      "topic": "Unit 1 — Fall of Rome. Live mark C. Last published average 3.3 is from the Sep 28 Weekly Progress email (that email’s mark was B). No assignment dated after 2026-09-28.",
       "recent": [
         {
           "title": "Notebook Check #1",
@@ -149,7 +149,7 @@ window.HUB_CONTENT = {
         }
       ],
       "upcoming": [],
-      "lastUpdated": "2026-09-27"
+      "lastUpdated": "2026-10-04"
     },
     {
       "id": "advisement",
@@ -157,7 +157,7 @@ window.HUB_CONTENT = {
       "course": "Advisement",
       "teacher": "Barnes",
       "room": "ILab",
-      "topic": "not published",
+      "topic": "Not in the gradebook on the 2026-10-04 morning Aeries check.",
       "recent": [],
       "upcoming": [],
       "lastUpdated": "2026-10-04"
@@ -171,10 +171,21 @@ window.HUB_CONTENT = {
       "avg": 3.6,
       "mark": "A-",
       "quarter": "1",
-      "topic": "LT 1.4–1.6 signed fractions. LTQ #2 was Tuesday, September 22, 2026. No newer scored work in Weekly Progress 09/21–09/28.",
-      "recent": [],
+      "topic": "Unit 1 assessment is split. Thursday, October 8: Learning Targets 1.1–1.5. Friday, October 9: Learning Targets 1.6–1.9. Review Monday–Wednesday, October 5–7. Extra practice packet from the start of the unit is due Friday, October 9 and will not be accepted late. No tutorial that week because those are minimum days. Hub practice covers Targets 1.4–1.6 only (add, multiply, and divide positive and negative fractions), not the whole unit. Last published average 3.6 is from the Sep 28 Weekly Progress email.",
+      "recent": [
+        {
+          "title": "Fractions Riddle",
+          "due": "2026-10-02",
+          "score": 4
+        },
+        {
+          "title": "Worksheet 9/28",
+          "due": "2026-09-29",
+          "score": 4
+        }
+      ],
       "upcoming": [],
-      "lastUpdated": "2026-09-24"
+      "lastUpdated": "2026-10-04"
     },
     {
       "id": "science",
@@ -183,10 +194,20 @@ window.HUB_CONTENT = {
       "teacher": "Blair",
       "room": "23",
       "avg": 3.9,
-      "mark": "A",
+      "mark": "B",
       "quarter": "1",
-      "topic": "Bath Bombs unit — Lesson 3 Progress Check and CER classwork. p. 28 Lesson 5 CER was listed due Mon 09/28 (score not in adjusted section).",
+      "topic": "Live mark B. Last published average 3.9 is from the Sep 28 Weekly Progress email (that email’s mark was A).",
       "recent": [
+        {
+          "title": "Test: Explaining Another Phenomenon",
+          "due": "2026-10-01",
+          "score": 2
+        },
+        {
+          "title": "Case of the Missing Necklace CER",
+          "due": "2026-09-30",
+          "score": 4
+        },
         {
           "title": "Bath Bombs Lesson 3 Quiz",
           "due": "2026-09-23",
@@ -199,7 +220,7 @@ window.HUB_CONTENT = {
         }
       ],
       "upcoming": [],
-      "lastUpdated": "2026-09-25"
+      "lastUpdated": "2026-10-04"
     },
     {
       "id": "avid",
@@ -210,8 +231,13 @@ window.HUB_CONTENT = {
       "avg": 3.8,
       "mark": "A",
       "quarter": "1",
-      "topic": "WICOR presentation work.",
+      "topic": "Live mark A. Last published average 3.8 is from the Sep 28 Weekly Progress email.",
       "recent": [
+        {
+          "title": "AVID Article",
+          "due": "2026-09-30",
+          "score": 4
+        },
         {
           "title": "Presentation",
           "due": "2026-09-21",
@@ -219,7 +245,7 @@ window.HUB_CONTENT = {
         }
       ],
       "upcoming": [],
-      "lastUpdated": "2026-09-21"
+      "lastUpdated": "2026-10-04"
     },
     {
       "id": "ela",
@@ -230,8 +256,13 @@ window.HUB_CONTENT = {
       "avg": 3.8,
       "mark": "A",
       "quarter": "1",
-      "topic": "Grammar — sentence fragments (after compound subjects/predicates).",
+      "topic": "Grammar Unit 1 summative was taken on 2026-10-01 (3.6). The weak item remains the Sep 18 practice check (2.4) on compound subjects and predicates. Hub practice is a review of that skill. Class had moved to sentence fragments before the summative (Sep 22 homework scored 4). Last published average 3.8 is from the Sep 28 Weekly Progress email. Live mark A.",
       "recent": [
+        {
+          "title": "Grammar Unit 1 summative",
+          "due": "2026-10-01",
+          "score": 3.6
+        },
         {
           "title": "Mon HW - KA Sentence Fragments Video + Practice",
           "due": "2026-09-22",
@@ -244,14 +275,14 @@ window.HUB_CONTENT = {
         }
       ],
       "upcoming": [],
-      "lastUpdated": "2026-09-24"
+      "lastUpdated": "2026-10-04"
     }
   ],
   "mathLevels": [
     {
       "id": "ltq2",
-      "name": "LTQ #2 · Signed fractions",
-      "description": "LT 1.4–1.6 topic practice: add, multiply, and divide positive and negative fractions. 18 original practice questions with worked explanations; these are not the teacher’s quiz or packet questions.",
+      "name": "Targets 1.4–1.6 only · Signed fractions",
+      "description": "This set covers Targets 1.4–1.6 only: add, multiply, and divide positive and negative fractions. It is not the whole Unit 1 test. 18 original practice questions with worked explanations; these are not the teacher’s quiz or packet questions.",
       "questions": [
         {
           "topic": "LTQ #2 · Add fractions",

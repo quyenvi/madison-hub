@@ -91,9 +91,9 @@ window.HUB_CONTENT = {
     }
   ],
   "schoolMeta": {
-    "asOf": "2026-09-27",
-    "source": "Weekly Progress 2026-09-21 (Aeries session unavailable this run)",
-    "note": "Upcoming work only when published in Aeries/Canvas. Next Weekly Progress expected ~Mon 2026-09-28 midnight PT."
+    "asOf": "2026-10-04",
+    "source": "ParentSquare Weekly Progress as of 2026-09-28 12:16 AM PT (Aeries: no parent session; login page only)",
+    "note": "Upcoming this/next week: not published beyond the 09/28–10/05 window in that email. Next Weekly Progress expected ~Mon 2026-10-05 midnight PT. Flags: World History Fall of Rome Vocab Quiz 2.0; ELA [PC] Compound Subjects and Predicates 2.4."
   },
   "classes": [
     {
@@ -102,19 +102,29 @@ window.HUB_CONTENT = {
       "course": "PE",
       "teacher": "Handley",
       "room": "Gym",
-      "avg": 3.7,
+      "avg": 3.8,
       "mark": "A",
       "quarter": "1",
-      "topic": "not published",
+      "topic": "Weekly participation grades (no unit title published).",
       "recent": [
         {
-          "title": "Weekly grade (week of 9/8\u20139/11)",
-          "due": "2026-09-11",
-          "score": 3
+          "title": "Week of 9/21 - 9/25",
+          "due": "2026-09-25",
+          "score": 4
+        },
+        {
+          "title": "Week of 9/14 - 9/18",
+          "due": "2026-09-18",
+          "score": 4
+        },
+        {
+          "title": "Syllabus Acknowledgment Form",
+          "due": "2026-09-04",
+          "score": 4
         }
       ],
       "upcoming": [],
-      "lastUpdated": "2026-09-27"
+      "lastUpdated": "2026-09-25"
     },
     {
       "id": "world-history",
@@ -122,11 +132,22 @@ window.HUB_CONTENT = {
       "course": "World History 7",
       "teacher": "Phan",
       "room": "P33",
-      "avg": 4.0,
-      "mark": "A",
+      "avg": 3.3,
+      "mark": "B",
       "quarter": "1",
-      "topic": "not published",
-      "recent": [],
+      "topic": "Unit 1 — Fall of Rome (vocab quiz + notebook check).",
+      "recent": [
+        {
+          "title": "Notebook Check #1",
+          "due": "2026-09-24",
+          "score": 4
+        },
+        {
+          "title": "Fall of Rome - Vocab Quiz",
+          "due": "2026-09-23",
+          "score": 2
+        }
+      ],
       "upcoming": [],
       "lastUpdated": "2026-09-27"
     },
@@ -139,7 +160,7 @@ window.HUB_CONTENT = {
       "topic": "not published",
       "recent": [],
       "upcoming": [],
-      "lastUpdated": "2026-09-27"
+      "lastUpdated": "2026-10-04"
     },
     {
       "id": "math",
@@ -150,10 +171,10 @@ window.HUB_CONTENT = {
       "avg": 3.6,
       "mark": "A-",
       "quarter": "1",
-      "topic": "LT 1.4\u20131.6 signed fractions. LTQ #2 was Tuesday, September 22, 2026. Extra Practice Packet through page 13 (no newer unit published).",
+      "topic": "LT 1.4–1.6 signed fractions. LTQ #2 was Tuesday, September 22, 2026. No newer scored work in Weekly Progress 09/21–09/28.",
       "recent": [],
       "upcoming": [],
-      "lastUpdated": "2026-09-27"
+      "lastUpdated": "2026-09-24"
     },
     {
       "id": "science",
@@ -161,29 +182,24 @@ window.HUB_CONTENT = {
       "course": "Science 7",
       "teacher": "Blair",
       "room": "23",
-      "avg": 4.0,
+      "avg": 3.9,
       "mark": "A",
       "quarter": "1",
-      "topic": "Lab safety / initial model-based explanation / health unit wrap from recent scores (no newer unit published).",
+      "topic": "Bath Bombs unit — Lesson 3 Progress Check and CER classwork. p. 28 Lesson 5 CER was listed due Mon 09/28 (score not in adjusted section).",
       "recent": [
         {
-          "title": "Lab Safety Progress Check",
-          "due": "2026-09-14",
-          "score": 4
+          "title": "Bath Bombs Lesson 3 Quiz",
+          "due": "2026-09-23",
+          "score": 3
         },
         {
-          "title": "pg.17 Initial Model Based Explanation",
-          "due": "2026-09-14",
-          "score": 4
-        },
-        {
-          "title": "Health Test Helping a Friend",
-          "due": "2026-09-09",
+          "title": "p. 20 Lesson 2 CER",
+          "due": "2026-09-17",
           "score": 4
         }
       ],
       "upcoming": [],
-      "lastUpdated": "2026-09-27"
+      "lastUpdated": "2026-09-25"
     },
     {
       "id": "avid",
@@ -191,13 +207,19 @@ window.HUB_CONTENT = {
       "course": "AVID 7A",
       "teacher": "Aldana",
       "room": "16",
-      "avg": 3.9,
+      "avg": 3.8,
       "mark": "A",
       "quarter": "1",
-      "topic": "not published",
-      "recent": [],
+      "topic": "WICOR presentation work.",
+      "recent": [
+        {
+          "title": "Presentation",
+          "due": "2026-09-21",
+          "score": 3.5
+        }
+      ],
       "upcoming": [],
-      "lastUpdated": "2026-09-27"
+      "lastUpdated": "2026-09-21"
     },
     {
       "id": "ela",
@@ -207,38 +229,22 @@ window.HUB_CONTENT = {
       "room": "25",
       "avg": 3.8,
       "mark": "A",
-      "formative": 3.46,
       "quarter": "1",
-      "topic": "Grammar \u2014 compound subjects and predicates, after finishing the StudySync short story \u201cThe Wise Old Woman\u201d (no newer unit published).",
+      "topic": "Grammar — sentence fragments (after compound subjects/predicates).",
       "recent": [
+        {
+          "title": "Mon HW - KA Sentence Fragments Video + Practice",
+          "due": "2026-09-22",
+          "score": 4
+        },
         {
           "title": "[PC] Compound Subjects and Predicates",
           "due": "2026-09-18",
           "score": 2.4
-        },
-        {
-          "title": "[SA] Wise Old Woman Test",
-          "due": "2026-09-17",
-          "score": 4
-        },
-        {
-          "title": "Summary outline",
-          "due": "2026-09-16",
-          "score": 4
-        },
-        {
-          "title": "Wise Old Woman story+notes",
-          "due": "2026-09-14",
-          "score": 4
-        },
-        {
-          "title": "[PC] Complete Subjects and Predicates",
-          "due": "2026-09-11",
-          "score": 3.2
         }
       ],
       "upcoming": [],
-      "lastUpdated": "2026-09-27"
+      "lastUpdated": "2026-09-24"
     }
   ],
   "mathLevels": [

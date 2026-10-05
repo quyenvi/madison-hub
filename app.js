@@ -7,6 +7,7 @@ const paths = {
  ai:'M9 3h6v3h3v12H6V6h3z M9 10h.01 M15 10h.01 M9 14h6 M3 9v6 M21 9v6 M9 18v3 M15 18v3',
  home:'M3 10 12 3l9 7v10H3z M9 20v-7h6v7',
  math:'M5 4h14v16H5z M8 8h8 M8 12h2 M14 12h2 M8 16h2 M14 16h2',
+ history:'M6 20h12 M8 20V9 M16 20V9 M5 9h14 M9 9V5h6v4',
  basketball:'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0 M3 12h18 M12 3v18 M6 5c7 4 7 10 0 14 M18 5c-7 4-7 10 0 14',
  travel:'M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2z M9 3v16 M15 5v16',
  school:'M3 4h7l2 2 2-2h7v15h-7l-2 2-2-2H3z M12 6v15'
@@ -16,6 +17,7 @@ const sections = [
  {id:'ai',name:'AI',desc:'Explore how AI works.',meta:'Eight weekly lessons'},
  {id:'ela',name:'ELA',desc:'Read closely. Write clearly.',meta:'5-question practice'},
  {id:'math',name:'Math',desc:'Small steps. Stronger skills.',meta:'5-question warm-up'},
+ {id:'history',name:'History',desc:'State a claim. Back it up.',meta:'5-question practice'},
  {id:'basketball',name:'Basketball',desc:'Put in the work. Find your game.',meta:'Your practice plan'},
  {id:'travel',name:'Travel',desc:'A little planning. A new adventure.',meta:'Explore & get ready'},
  {id:'school',name:'School',desc:'Clear your mind. Plan your day.',meta:'Grade 7 classes'}
@@ -309,7 +311,7 @@ function schoolRoster(){
   const gradeHtml=grade?`<p class="class-mark">${quarter}${escapeHTML(grade)}</p>`:`<p class="class-mark class-mark-empty">No average</p>`;
   const formative=item.formative!=null&&item.formative!==''?`<p class="class-formative">Formative ~${escapeHTML(pointsLabel(item.formative))}</p>`:'';
   const updated=published&&/^\d{4}-\d{2}-\d{2}$/.test(item.lastUpdated||'')?`Last updated ${calendarDate(item.lastUpdated)}.`:'Last updated from Weekly Progress 2026-09-21.';
-  const practice=item.id==='math'?'<a class="text-button" href="#math">Practice this topic in Math</a>':'';
+  const practice=item.id==='math'?'<a class="text-button" href="#math">Practice this topic in Math</a>':item.id==='world-history'?'<a class="text-button" href="#history">Practice this topic</a>':'';
   return `<article class="panel class-card" id="class-${escapeHTML(item.id||'class')}"><div class="class-card-top"><div><div class="eyebrow">${escapeHTML(periodLabel(item.period))}</div><h2>${escapeHTML(item.course||'Class')}</h2><p class="class-teacher">${escapeHTML([item.teacher,item.room].filter(Boolean).join(' · '))}</p></div><div class="class-grade">${gradeHtml}${formative}</div></div><p class="class-topic"><span class="class-label">Current topic</span> ${published?escapeHTML(item.topic):'<span class="muted">not published</span>'}</p>${practice}<h3>Recent</h3>${assignmentList(item.recent,'None listed in this update.')}<h3>Upcoming</h3>${assignmentList(item.upcoming,'not published')}<p class="note">${escapeHTML(updated)}</p></article>`;
  }).join('');
  return `<section class="class-roster" aria-labelledby="class-roster-heading"><div class="section-heading"><h2 id="class-roster-heading">Beacon Park · Grade 7</h2>${asOf?`<span>As of ${escapeHTML(asOf)}</span>`:''}</div>${sourceBits.length?`<p class="roster-source">${sourceBits.join(' ')}</p>`:''}<div class="class-grid">${cards}</div></section>`;
@@ -328,6 +330,7 @@ function render(){const route=location.hash.slice(1);const active=sections.some(
  if(active==='ela'){main.innerHTML=elaPage();bindELA();}
  if(active==='ai'){main.innerHTML=aiPage();bindAI();}
  if(active==='math'){startQuiz();main.innerHTML=math();bindMath();drawQuiz();}
+ if(active==='history'){main.innerHTML=historyPage();bindHistory();}
  if(active==='basketball')main.innerHTML=intro('BASKETBALL','Your next game. Your next rep.','Keep your team schedule and your practice plan together.')+teamSchedule()+acesSkills()+`<div class="two-col"><section class="panel"><h2>Today’s practice <span class="muted">· 15 min</span></h2>${checklist('basketball',content.basketball)}</section><aside class="panel basketball"><div class="eyebrow">YOUR FOCUS</div><h2>Control before speed.</h2><p>Stay balanced. Keep your eyes up. Make each rep intentional.</p><p class="note">Start with your usual warm-up. Take water breaks and follow your coach’s guidance.</p></aside></div>`;
  if(active==='travel')main.innerHTML=travelPage();
  if(active==='school')main.innerHTML=schoolPage();

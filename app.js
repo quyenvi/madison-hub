@@ -221,11 +221,20 @@ function scheduleEvents(){
   return e.date+'|'+team+'|'+title;
  };
  const weeklyKeys=new Set(weekly.map(key));
- return [...(state.teamSchedule?.events||[]).filter(e=>!weeklyKeys.has(key(e))),...weekly];
+ // One-week team update; imported device data stays untouched.
+ const isChangedWestsidePractice=e=>e.date>='2026-10-05'&&e.date<='2026-10-11'
+  &&/^westside(?:united)?$/.test(e.team.toLowerCase().replace(/[^a-z0-9]/g,''))
+  &&/\bpractice\b/i.test(e.title);
+ const westsideUpdate={
+  id:'westside-practice-2026-10-07',date:'2026-10-07',endDate:'2026-10-07',
+  team:'Westside United',title:'Practice',startTime:'18:00',endTime:'19:30',timeZone:'America/Los_Angeles',
+  details:'6:00-7:30 PM Pacific - Portola\nOnly Westside practice this week (October 5-11). Limited gym availability.'
+ };
+ return [...(state.teamSchedule?.events||[]).filter(e=>!weeklyKeys.has(key(e))&&!isChangedWestsidePractice(e)),...weekly,westsideUpdate];
 }
 function teamSchedule(){
  const schedule=state.teamSchedule;
- const teams=[...new Set(['OCR Pink',...(schedule?.events||[]).map(e=>e.team)])].sort();
+ const teams=[...new Set(['OCR Pink','Westside United',...(schedule?.events||[]).map(e=>e.team)])].sort();
  if(!teams.includes(scheduleTeam))scheduleTeam='all';
  return '<section class="panel team-schedule" aria-labelledby="schedule-title"><div class="section-heading"><h2 id="schedule-title">Team schedule</h2><label class="small-button schedule-upload" for="schedule-file">Import schedule<input id="schedule-file" type="file" accept=".json,application/json"></label></div><p class="note">OCR Pink weekly sessions are included. Import a schedule to add games and other team events. Importing a new file replaces the previous imported schedule on this device.</p><p id="schedule-message" role="status"></p>'+
  (schedule?'<p class="note">'+escapeHTML(schedule.source)+' · Imported snapshot from '+calendarDate(schedule.exportedAt.slice(0,10))+'<br>Imported coverage: '+calendarDate(schedule.coverageStart)+' – '+calendarDate(schedule.coverageEnd)+'</p>':'')+

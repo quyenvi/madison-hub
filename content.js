@@ -93,7 +93,7 @@ window.HUB_CONTENT = {
   "schoolMeta": {
     "asOf": "2026-10-04",
     "source": "Marks are from a live Aeries check on 2026-10-04 morning (about 7:52 AM PT).",
-    "note": "Numeric averages still shown are from the Sep 28 Weekly Progress email. A newer average was not on the Aeries page."
+    "note": "Numeric averages still shown are from the Sep 28 Weekly Progress email, except World History (C, 2.3 from the 10/05/2026 Weekly Progress). A newer average for the other classes was not on the Aeries page."
   },
   "classes": [
     {
@@ -132,10 +132,10 @@ window.HUB_CONTENT = {
       "course": "World History 7",
       "teacher": "Phan",
       "room": "P33",
-      "avg": 3.3,
+      "avg": 2.3,
       "mark": "C",
       "quarter": "1",
-      "topic": "Unit 1 — Fall of Rome. Live mark C. Last published average 3.3 is from the Sep 28 Weekly Progress email (that email’s mark was B). No assignment dated after 2026-09-28.",
+      "topic": "Unit 1 — Fall of Rome. Weekly Progress 10/05/2026: C, average 2.3. Rome One-Pager (about Sep 16) scored 2 for Critical Thinking and 2 for Historical Accuracy. Fall of Rome vocab quiz is now a 3.",
       "recent": [
         {
           "title": "Notebook Check #1",
@@ -145,11 +145,21 @@ window.HUB_CONTENT = {
         {
           "title": "Fall of Rome - Vocab Quiz",
           "due": "2026-09-23",
+          "score": 3
+        },
+        {
+          "title": "Rome One-Pager · Historical Accuracy",
+          "due": "2026-09-16",
+          "score": 2
+        },
+        {
+          "title": "Rome One-Pager · Critical Thinking",
+          "due": "2026-09-16",
           "score": 2
         }
       ],
       "upcoming": [],
-      "lastUpdated": "2026-10-04"
+      "lastUpdated": "2026-10-05"
     },
     {
       "id": "advisement",

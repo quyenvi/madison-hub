@@ -1,5 +1,5 @@
 /* Increment VERSION whenever you change any app file, including content.js. */
-const VERSION = 'v25-westside-week-2026-10-05';
+const VERSION = 'v26-startup-stars-2026-10-06';
 const PREFIX = 'madison-hub-' + self.registration.scope;
 const CACHE = PREFIX + VERSION;
 const APP = ['./','./index.html','./styles.css','./content.js','./weekly-calendar.js','./ocr-weekly.js','./app.js','./fruit.js','./ela.js','./history.js','./ai.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./maskable-512.png','./apple-touch-icon.png'];

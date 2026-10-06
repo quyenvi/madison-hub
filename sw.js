@@ -1,5 +1,5 @@
 /* Increment VERSION whenever you change any app file, including content.js. */
-const VERSION = 'v28-aces-oct10-11-2026';
+const VERSION = 'v29-separate-school-calendar';
 const PREFIX = 'madison-hub-' + self.registration.scope;
 const CACHE = PREFIX + VERSION;
 const APP = ['./','./index.html','./styles.css','./content.js','./weekly-calendar.js','./ocr-weekly.js','./app.js','./fruit.js','./ela.js','./history.js','./ai.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./maskable-512.png','./apple-touch-icon.png'];

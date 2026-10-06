@@ -219,6 +219,13 @@ function isOfficialAcesImport(e){
  if(/vfw|invitational/i.test(e.title)&&/tournament|invitational/i.test(e.title))return true;
  return officialAcesGames.some(game=>game.date===e.date&&(e.id===game.id||normalize(e.title).includes(normalize(game.opponent))));
 }
+// Beginner after-school sessions; Pacific wall times survive the November DST change.
+const startupStars=['2026-10-13','2026-10-20','2026-10-27','2026-11-03','2026-11-10','2026-11-17'].map(date=>({
+ id:'startup-stars-beginner-'+date,date,endDate:date,team:'Startup Stars',title:'Beginner after-school session',
+ startTime:'15:15',endTime:'16:15',timeZone:'America/Los_Angeles',
+ details:'3:15-4:15 PM Pacific - Room P29\nGrades 6-8. Beginner Tuesdays. Bengal Marketplace date TBD.'
+}));
+const isStartupProgramEvent=e=>/\bstartup\s*stars\b/i.test(e.team+' '+e.title);
 function scheduleEvents(){
  const weekly=window.OCR_WEEKLY_SCHEDULE.eventsBetween(scheduleWeek,calendar.addDays(scheduleWeek,6)).map(e=>({
   id:e.id,date:e.date,endDate:e.endDate,team:'OCR Pink',title:e.title,startTime:e.startTime,
@@ -243,22 +250,13 @@ function scheduleEvents(){
   team:'Westside United',title:'Practice',startTime:'18:00',endTime:'19:30',timeZone:'America/Los_Angeles',
   details:'6:00-7:30 PM Pacific - Portola\nOnly Westside practice this week (October 5-11). Limited gym availability.'
  };
- // Beginner after-school sessions; Pacific wall times survive the November DST change.
- const startupStars=['2026-10-13','2026-10-20','2026-10-27','2026-11-03','2026-11-10','2026-11-17'].map(date=>({
-  id:'startup-stars-beginner-'+date,date,endDate:date,team:'Startup Stars',title:'Beginner after-school session',
-  startTime:'15:15',endTime:'16:15',timeZone:'America/Los_Angeles',
-  details:'3:15-4:15 PM Pacific - Room P29\nGrades 6-8. Beginner Tuesdays. Bengal Marketplace date TBD.'
- }));
- const isStartupDuplicate=e=>startupStars.some(session=>session.date===e.date)
-  && /\bstartup\s*stars\b/i.test(e.team+' '+e.title)
-  && !/\b(?:advanced|tutorial|marketplace)\b/i.test(e.title);
- return [...(state.teamSchedule?.events||[]).filter(e=>!weeklyKeys.has(key(e))&&!isChangedWestsidePractice(e)&&!isStartupDuplicate(e)&&!isOfficialAcesImport(e)),...weekly,westsideUpdate,...startupStars,...acesGames];
+ return [...(state.teamSchedule?.events||[]).filter(e=>!weeklyKeys.has(key(e))&&!isChangedWestsidePractice(e)&&!isStartupProgramEvent(e)&&!isOfficialAcesImport(e)),...weekly,westsideUpdate,...acesGames];
 }
 function teamSchedule(){
  const schedule=state.teamSchedule;
- const teams=[...new Set(['OCR Pink','Westside United','VFW Aces','Startup Stars',...(schedule?.events||[]).map(e=>e.team)])].sort();
+ const teams=[...new Set(['OCR Pink','Westside United','VFW Aces',...(schedule?.events||[]).filter(e=>!isStartupProgramEvent(e)).map(e=>e.team)])].sort();
  if(!teams.includes(scheduleTeam))scheduleTeam='all';
- return '<section class="panel team-schedule" aria-labelledby="schedule-title"><div class="section-heading"><h2 id="schedule-title">Team schedule</h2><label class="small-button schedule-upload" for="schedule-file">Import schedule<input id="schedule-file" type="file" accept=".json,application/json"></label></div><p class="note">OCR Pink weekly sessions, Startup Stars beginner Tuesdays (October 13-November 17), and the verified October 10-11 Aces games are included. Import a schedule to add other team events. Importing a new file replaces the previous imported schedule on this device.</p><p id="schedule-message" role="status"></p>'+
+ return '<section class="panel team-schedule" aria-labelledby="schedule-title"><div class="section-heading"><h2 id="schedule-title">Team schedule</h2><label class="small-button schedule-upload" for="schedule-file">Import schedule<input id="schedule-file" type="file" accept=".json,application/json"></label></div><p class="note">OCR Pink weekly sessions and the verified October 10-11 Aces games are included. Import a schedule to add other team events. Importing a new file replaces the previous imported schedule on this device.</p><p id="schedule-message" role="status"></p>'+
  (schedule?'<p class="note">'+escapeHTML(schedule.source)+' · Imported snapshot from '+calendarDate(schedule.exportedAt.slice(0,10))+'<br>Imported coverage: '+calendarDate(schedule.coverageStart)+' – '+calendarDate(schedule.coverageEnd)+'</p>':'')+
  '<div class="hub-week-toolbar"><div class="week-control"><button id="schedule-prev-week" class="small-button" aria-label="Previous week">←</button><h3 id="schedule-week-label" aria-live="polite">'+calendar.label(scheduleWeek)+'</h3><button id="schedule-next-week" class="small-button" aria-label="Next week">→</button></div><button id="schedule-this-week" class="small-button">This week</button></div><div class="schedule-filters"><label>Team<select id="schedule-team"><option value="all">All teams</option>'+teams.map(team=>'<option '+(team===scheduleTeam?'selected ':'')+'value="'+escapeHTML(team)+'">'+escapeHTML(team)+'</option>').join('')+'</select></label><p class="note">Monday–Sunday · All times Pacific</p></div><div id="schedule-events" class="weekly-grid" aria-live="polite"></div>'+
  '<p class="note">Confirm changes with your team. <a class="text-button" href="https://events.teamsnap.com/events/50755/results" target="_blank" rel="noopener noreferrer">Official VFW tournament schedule</a> <a class="text-button" href="https://madison27.tomongo.chatgpt.site/#schedule" target="_blank" rel="noopener noreferrer">Open original calendar (sign-in required)</a></p></section>';
@@ -352,8 +350,27 @@ function schoolWeeklyUpdate(){
  return '<section class="panel team-schedule" aria-labelledby="weekly-school-heading"><div class="eyebrow">CHECKED OCTOBER 4, 2026</div><h2 id="weekly-school-heading">Class dates to keep in mind</h2><article><h3>Math 7 · Unit 1 assessment</h3><p><strong>Review Monday–Wednesday, October 5–7.</strong></p><p><strong>Thursday, October 8:</strong> Learning Targets 1.1 through 1.5.<br><strong>Friday, October 9:</strong> Learning Targets 1.6 through 1.9.</p><p>The extra practice packet from the start of the unit is due <strong>Friday, October 9</strong> and will not be accepted late. No tutorial that week because those are minimum days. The hub practice set covers Targets 1.4–1.6 only (add, multiply, and divide positive and negative fractions), not the whole unit.</p></article><article><h3>AVID · College &amp; Career Fair</h3><p><strong>Monday, October 5 · 5–7 p.m.</strong><br>Portola High School Gym</p><p>Explore college and career options and bring your questions. Mrs. Aldana encourages AVID students to attend; this is an optional event.</p></article><article><h3>AVID · Angels Stadium field trip</h3><p><strong>Tuesday, October 20, 2026</strong></p><p>Tour the stadium and learn about careers in sports. Return both your signed permission slip and stadium waiver by <strong>Friday, October 9</strong>. The forms were sent home; ask your teacher if you need another copy.</p><p>Bring your lunch, or arrange a cafeteria lunch with your teacher ahead of time. Attend Zero Period and Extended Day as usual if they are on your schedule. Make up work missed in Periods 2–5.</p></article><article><h3>AVID + ASB · Disney Imagination Campus field trip</h3><p><strong>Monday, December 14, 2026</strong></p><p>The planned course is Leadership and Teamwork the Disney Way, with a visit to California Adventure. Return your signed permission slip to Mrs. Aldana or Ms. Cassese. The trip payment deadline was <strong>October 1</strong>; check with your parent that your trip arrangements are complete.</p><p>Make up any classwork missed that day. Confirm the final schedule with your teacher before the trip.</p></article><p class="note">Teacher announcements: Math assessment, October 2; Angels Stadium trip, October 1; AVID fair and Disney trip, September 2 and September 22. <strong>No school Monday, October 12</strong> (school newsletter, October 2).</p></section>';
 }
 
+let schoolCalendarWeek=calendar.monday(calendar.today()<'2026-10-13'?'2026-10-13':calendar.today());
+function schoolProgramCalendar(){
+ return '<section class="panel team-schedule" aria-labelledby="school-calendar-title"><div class="section-heading"><h2 id="school-calendar-title">School program calendar</h2></div><p><strong>Startup Stars - Beginner Tuesdays</strong><br>October 13-November 17, 2026. 3:15-4:15 PM Pacific, room P29.</p><p class="note">Grades 6-8. Bengal Marketplace date TBD.</p><div class="hub-week-toolbar"><div class="week-control"><button id="school-calendar-prev" class="small-button" aria-label="Previous school calendar week">Previous</button><h3 id="school-calendar-week" aria-live="polite">'+calendar.label(schoolCalendarWeek)+'</h3><button id="school-calendar-next" class="small-button" aria-label="Next school calendar week">Next</button></div><button id="school-calendar-today" class="small-button">This week</button></div><p class="note">Monday-Sunday - All times Pacific</p><div id="school-calendar-events" class="weekly-grid" aria-live="polite"></div></section>';
+}
+function drawSchoolProgramCalendar(){
+ const target=document.querySelector('#school-calendar-events');if(!target)return;
+ document.querySelector('#school-calendar-week').textContent=calendar.label(schoolCalendarWeek);
+ const today=calendar.today();
+ target.innerHTML=calendar.days(schoolCalendarWeek).map(day=>{
+  const events=startupStars.filter(e=>calendar.occursOn(e,day));
+  return '<section class="weekly-day'+(day===today?' is-today':'')+'" aria-labelledby="school-program-day-'+day+'"><h4 id="school-program-day-'+day+'"><span>'+calendar.format(day,{weekday:'long'})+'</span><time datetime="'+day+'"'+(day===today?' aria-current="date"':'')+'>'+calendar.format(day,{month:'short',day:'numeric'})+'</time></h4><div class="weekly-day-events">'+(events.length?events.map(e=>'<article class="weekly-event"><span class="weekly-team">'+escapeHTML(e.team)+'</span><h5>'+escapeHTML(e.title)+'</h5><p class="trip-notes">'+escapeHTML(e.details)+'</p></article>').join(''):'<p class="weekly-empty">No events</p>')+'</div></section>';
+ }).join('');
+}
+function bindSchoolProgramCalendar(){
+ drawSchoolProgramCalendar();
+ document.querySelector('#school-calendar-prev').onclick=()=>{schoolCalendarWeek=calendar.addDays(schoolCalendarWeek,-7);drawSchoolProgramCalendar();};
+ document.querySelector('#school-calendar-next').onclick=()=>{schoolCalendarWeek=calendar.addDays(schoolCalendarWeek,7);drawSchoolProgramCalendar();};
+ document.querySelector('#school-calendar-today').onclick=()=>{schoolCalendarWeek=calendar.monday(calendar.today());drawSchoolProgramCalendar();};
+}
 function schoolPage(){
- return intro('SCHOOL','A clear plan. A fresh start.','Beacon Park Grade 7 is here, then the little things that keep the day moving.')+schoolWeeklyUpdate()+schoolRoster()+`<div class="two-col"><section class="panel"><h2>Your daily checklist</h2>${checklist('school',content.school||[])}</section><aside class="panel school"><div class="eyebrow">ONE THING AT A TIME</div><h2>Make a little focus space.</h2><p>Choose one task, clear a spot, and put distractions aside. Take a short break when you finish.</p><a class="primary" href="#math">Try the math warm-up ↗</a></aside></div>`;
+ return intro('SCHOOL','A clear plan. A fresh start.','Beacon Park Grade 7 is here, then the little things that keep the day moving.')+schoolProgramCalendar()+schoolWeeklyUpdate()+schoolRoster()+`<div class="two-col"><section class="panel"><h2>Your daily checklist</h2>${checklist('school',content.school||[])}</section><aside class="panel school"><div class="eyebrow">ONE THING AT A TIME</div><h2>Make a little focus space.</h2><p>Choose one task, clear a spot, and put distractions aside. Take a short break when you finish.</p><a class="primary" href="#math">Try the math warm-up ↗</a></aside></div>`;
 }
 function render(){const route=location.hash.slice(1);const active=sections.some(s=>s.id===route)?route:'home';document.title=`${active==='home'?'Home':sections.find(s=>s.id===active).name} · Madison Hub`;
  document.querySelector('#nav').innerHTML=[{id:'home',name:'Home'},...sections].map(s=>`<a class="nav-link" href="#${s.id}" ${s.id===active?'aria-current="page"':''}>${icon(s.id)}<span>${s.name}</span></a>`).join('');
@@ -369,6 +386,7 @@ function render(){const route=location.hash.slice(1);const active=sections.some(
  main.insertAdjacentHTML('beforeend',`<p id="storage-warning" class="storage-warning" ${storageOK?'hidden':''}>This browser can’t save progress right now. You can still use the hub during this visit.</p>`);
  if(active==='travel')bindTravel();
  if(active==='basketball')bindSchedule();
+ if(active==='school')bindSchoolProgramCalendar();
  updateProgress();main.querySelectorAll('input[data-group]').forEach(input=>input.onchange=()=>{state[input.dataset.group+':'+input.dataset.id]=input.checked;save();updateProgress();});
  main.querySelectorAll('[data-reset]').forEach(button=>button.onclick=()=>{main.querySelectorAll(`input[data-group="${button.dataset.reset}"]`).forEach(input=>{input.checked=false;delete state[input.dataset.group+':'+input.dataset.id];});save();updateProgress();});
 }

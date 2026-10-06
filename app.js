@@ -207,6 +207,18 @@ function validSchedule(raw){
  return {format:raw.format,version:1,source:typeof raw.source==='string'?raw.source.slice(0,100):'Team calendar',timezone:'America/Los_Angeles',exportedAt:raw.exportedAt,coverageStart:raw.coverageStart,coverageEnd:raw.coverageEnd,events};
 }
 function calendarDate(date){return new Date(date+'T12:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});}
+const officialAcesGames=[
+ {id:'vfw-2026-aces-sabers-swish',date:'2026-10-10',startTime:'11:00',time:'11:00 AM Pacific',title:'vs. Sabers Swish',opponent:'Sabers Swish',side:'Away'},
+ {id:'vfw-2026-aces-tigers-spirit',date:'2026-10-10',startTime:'14:00',time:'2:00 PM Pacific',title:'vs. Tigers Spirit',opponent:'Tigers Spirit',side:'Home'},
+ {id:'vfw-2026-aces-tigers-wonder-girls',date:'2026-10-11',startTime:'12:00',time:'12:00 PM Pacific',title:'vs. Tigers Wonder Girls',opponent:'Tigers Wonder Girls',side:'Away'}
+].map(e=>({...e,endDate:e.date,team:'aces',type:'Game',timeZone:'America/Los_Angeles',tournament:'VFW Invitational',venue:'Cypress High School - Main gym (front gym)',note:'VFW Invitational - Girls 7th Grade Silver - '+e.side+' team. Verified from the official TeamSnap schedule screenshots. Start time only; end time not provided.',sourceUrl:'https://events.teamsnap.com/events/50755/results',directionsUrl:'https://www.google.com/maps/dir/?api=1&destination=Cypress%20High%20School'}));
+function isOfficialAcesImport(e){
+ const normalize=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+ if(!['aces','vfwaces'].includes(normalize(e.team))||e.date>'2026-10-11'||(e.endDate||e.date)<'2026-10-10')return false;
+ if(/practice/i.test(e.title))return false;
+ if(/vfw|invitational/i.test(e.title)&&/tournament|invitational/i.test(e.title))return true;
+ return officialAcesGames.some(game=>game.date===e.date&&(e.id===game.id||normalize(e.title).includes(normalize(game.opponent))));
+}
 function scheduleEvents(){
  const weekly=window.OCR_WEEKLY_SCHEDULE.eventsBetween(scheduleWeek,calendar.addDays(scheduleWeek,6)).map(e=>({
   id:e.id,date:e.date,endDate:e.endDate,team:'OCR Pink',title:e.title,startTime:e.startTime,
@@ -225,6 +237,7 @@ function scheduleEvents(){
  const isChangedWestsidePractice=e=>e.date>='2026-10-05'&&e.date<='2026-10-11'
   &&/^westside(?:united)?$/.test(e.team.toLowerCase().replace(/[^a-z0-9]/g,''))
   &&/\bpractice\b/i.test(e.title);
+ const acesGames=officialAcesGames.map(e=>({...e,team:'VFW Aces',details:e.time+' - '+e.venue+'\nGirls 7th Grade Silver - '+e.side+' team. Start time only; end time not provided.'}));
  const westsideUpdate={
   id:'westside-practice-2026-10-07',date:'2026-10-07',endDate:'2026-10-07',
   team:'Westside United',title:'Practice',startTime:'18:00',endTime:'19:30',timeZone:'America/Los_Angeles',
@@ -239,16 +252,16 @@ function scheduleEvents(){
  const isStartupDuplicate=e=>startupStars.some(session=>session.date===e.date)
   && /\bstartup\s*stars\b/i.test(e.team+' '+e.title)
   && !/\b(?:advanced|tutorial|marketplace)\b/i.test(e.title);
- return [...(state.teamSchedule?.events||[]).filter(e=>!weeklyKeys.has(key(e))&&!isChangedWestsidePractice(e)&&!isStartupDuplicate(e)),...weekly,westsideUpdate,...startupStars];
+ return [...(state.teamSchedule?.events||[]).filter(e=>!weeklyKeys.has(key(e))&&!isChangedWestsidePractice(e)&&!isStartupDuplicate(e)&&!isOfficialAcesImport(e)),...weekly,westsideUpdate,...startupStars,...acesGames];
 }
 function teamSchedule(){
  const schedule=state.teamSchedule;
- const teams=[...new Set(['OCR Pink','Westside United','Startup Stars',...(schedule?.events||[]).map(e=>e.team)])].sort();
+ const teams=[...new Set(['OCR Pink','Westside United','VFW Aces','Startup Stars',...(schedule?.events||[]).map(e=>e.team)])].sort();
  if(!teams.includes(scheduleTeam))scheduleTeam='all';
- return '<section class="panel team-schedule" aria-labelledby="schedule-title"><div class="section-heading"><h2 id="schedule-title">Team schedule</h2><label class="small-button schedule-upload" for="schedule-file">Import schedule<input id="schedule-file" type="file" accept=".json,application/json"></label></div><p class="note">OCR Pink weekly sessions and Startup Stars beginner Tuesdays (October 13-November 17) are included. Import a schedule to add games and other team events. Importing a new file replaces the previous imported schedule on this device.</p><p id="schedule-message" role="status"></p>'+
+ return '<section class="panel team-schedule" aria-labelledby="schedule-title"><div class="section-heading"><h2 id="schedule-title">Team schedule</h2><label class="small-button schedule-upload" for="schedule-file">Import schedule<input id="schedule-file" type="file" accept=".json,application/json"></label></div><p class="note">OCR Pink weekly sessions, Startup Stars beginner Tuesdays (October 13-November 17), and the verified October 10-11 Aces games are included. Import a schedule to add other team events. Importing a new file replaces the previous imported schedule on this device.</p><p id="schedule-message" role="status"></p>'+
  (schedule?'<p class="note">'+escapeHTML(schedule.source)+' · Imported snapshot from '+calendarDate(schedule.exportedAt.slice(0,10))+'<br>Imported coverage: '+calendarDate(schedule.coverageStart)+' – '+calendarDate(schedule.coverageEnd)+'</p>':'')+
  '<div class="hub-week-toolbar"><div class="week-control"><button id="schedule-prev-week" class="small-button" aria-label="Previous week">←</button><h3 id="schedule-week-label" aria-live="polite">'+calendar.label(scheduleWeek)+'</h3><button id="schedule-next-week" class="small-button" aria-label="Next week">→</button></div><button id="schedule-this-week" class="small-button">This week</button></div><div class="schedule-filters"><label>Team<select id="schedule-team"><option value="all">All teams</option>'+teams.map(team=>'<option '+(team===scheduleTeam?'selected ':'')+'value="'+escapeHTML(team)+'">'+escapeHTML(team)+'</option>').join('')+'</select></label><p class="note">Monday–Sunday · All times Pacific</p></div><div id="schedule-events" class="weekly-grid" aria-live="polite"></div>'+
- '<p class="note">Confirm changes with your team. <a class="text-button" href="https://madison27.tomongo.chatgpt.site/#schedule" target="_blank" rel="noopener noreferrer">Open original calendar (sign-in required)</a></p></section>';
+ '<p class="note">Confirm changes with your team. <a class="text-button" href="https://events.teamsnap.com/events/50755/results" target="_blank" rel="noopener noreferrer">Official VFW tournament schedule</a> <a class="text-button" href="https://madison27.tomongo.chatgpt.site/#schedule" target="_blank" rel="noopener noreferrer">Open original calendar (sign-in required)</a></p></section>';
 }
 function drawSchedule(){
  const target=document.querySelector('#schedule-events');if(!target)return;

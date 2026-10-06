@@ -5,6 +5,7 @@ const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;'
 const paths = {
  ela:'M3 4h7l2 2 2-2h7v15h-7l-2 2-2-2H3z M12 6v15 M6 8h3 M15 8h3 M6 12h3 M15 12h3',
  ai:'M9 3h6v3h3v12H6V6h3z M9 10h.01 M15 10h.01 M9 14h6 M3 9v6 M21 9v6 M9 18v3 M15 18v3',
+ calendar:'M4 5h16v16H4z M4 10h16 M8 3v4 M16 3v4 M8 14h2 M14 14h2 M8 18h2',
  home:'M3 10 12 3l9 7v10H3z M9 20v-7h6v7',
  math:'M5 4h14v16H5z M8 8h8 M8 12h2 M14 12h2 M8 16h2 M14 16h2',
  history:'M6 20h12 M8 20V9 M16 20V9 M5 9h14 M9 9V5h6v4',
@@ -22,6 +23,23 @@ const sections = [
  {id:'travel',name:'Travel',desc:'A little planning. A new adventure.',meta:'Explore & get ready'},
  {id:'school',name:'School',desc:'Clear your mind. Plan your day.',meta:'Grade 7 classes'}
 ];
+const mainSections=sections.filter(s=>!['basketball','school'].includes(s.id));
+mainSections.splice(mainSections.findIndex(s=>s.id==='travel'),0,{id:'calendar',name:'Calendar',desc:'Basketball and school, each in its own panel.',meta:'Two separate calendars'});
+function calendarRoute(hash){
+ const route=hash.replace(/^#/,'');
+ if(['calendar','calendar/basketball','basketball'].includes(route))return {active:'basketball',nav:'calendar'};
+ if(['calendar/school','school'].includes(route))return {active:'school',nav:'calendar'};
+ const active=sections.some(s=>s.id===route)?route:'home';return {active,nav:active};
+}
+function calendarSubnav(active){
+ return '<nav class="calendar-subnav" aria-label="Calendar panels"><a href="#calendar/basketball" '+(active==='basketball'?'aria-current="page"':'')+'>'+icon('basketball')+'<span>Basketball</span></a><a href="#calendar/school" '+(active==='school'?'aria-current="page"':'')+'>'+icon('school')+'<span>School</span></a></nav>';
+}
+function basketballTheme(team){
+ const name=String(team||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+ if(['aces','vfwaces'].includes(name))return 'aces';
+ if(['ocr','ocrpink','ocrhythm','ocrhythmpink','ocrhythm7pink'].includes(name))return 'ocr';
+ return name==='all'?'mixed':'neutral';
+}
 let state = {}; let storageOK = true;
 try { const saved=JSON.parse(localStorage.getItem('madison-hub-v1') || '{}'); if(saved && typeof saved==='object' && !Array.isArray(saved)) state=saved; } catch { storageOK=false; }
 function save(){try{localStorage.setItem('madison-hub-v1',JSON.stringify(state));}catch{storageOK=false; const warning=document.querySelector('#storage-warning'); if(warning) warning.hidden=false;}}
@@ -53,7 +71,7 @@ const intro = (label,title,subtitle) => `<div class="intro"><div class="eyebrow"
 function home(){
  return intro('YOUR EVERYDAY, A LITTLE MORE YOU.',`Hey, ${content.name}.`,'What are you getting into today?') +
  `<section class="hero"><div><div class="eyebrow">A LITTLE DAILY MOMENTUM</div><h2>Give your brain a warm-up.</h2><p>Five questions. A fresh start. Build your confidence, one answer at a time.</p><a class="primary" href="#math">Let’s practice <span aria-hidden="true">↗</span></a></div><div class="hero-mark" aria-hidden="true">5<span style="font-size:.55em">/5</span></div></section>
- <div class="section-heading"><h2>Your spaces</h2><span>Pick a place to start</span></div><div class="cards">${sections.map((s,i)=>`<a class="card ${s.id}" href="#${s.id}"><div class="card-top"><span class="icon-box">${icon(s.id)}</span><span class="number">0${i+1}</span></div><h2>${s.name}</h2><p>${s.desc}</p><div class="card-bottom"><span>${s.meta}</span><span aria-hidden="true">↗</span></div></a>`).join('')}</div>`;
+ <div class="section-heading"><h2>Your spaces</h2><span>Pick a place to start</span></div><div class="cards">${mainSections.map((s,i)=>`<a class="card ${s.id}" href="#${s.id}"><div class="card-top"><span class="icon-box">${icon(s.id)}</span><span class="number">0${i+1}</span></div><h2>${s.name}</h2><p>${s.desc}</p><div class="card-bottom"><span>${s.meta}</span><span aria-hidden="true">↗</span></div></a>`).join('')}</div>`;
 }
 function checklist(group,items){
  return `<div class="progress-label" id="${group}-progress" aria-live="polite"></div><progress id="${group}-bar" max="${items.length || 1}" value="0" aria-label="${group} completed"></progress><div class="check-list">${items.map(item=>`<label class="check-row"><input type="checkbox" data-group="${group}" data-id="${escapeHTML(item.id)}" ${state[group+':'+item.id]?'checked':''}><span><strong>${escapeHTML(item.title)}</strong>${item.detail?`<small>${escapeHTML(item.detail)}</small>`:''}</span></label>`).join('')}</div><button class="text-button" data-reset="${group}">Reset checklist</button>`;
@@ -263,12 +281,13 @@ function teamSchedule(){
 }
 function drawSchedule(){
  const target=document.querySelector('#schedule-events');if(!target)return;
+ main.dataset.jerseyTheme=basketballTheme(scheduleTeam);
  document.querySelector('#schedule-week-label').textContent=calendar.label(scheduleWeek);
  const today=calendar.today();
  const events=scheduleEvents().filter(e=>(scheduleTeam==='all'||e.team===scheduleTeam)&&calendar.inWeek(e,scheduleWeek));
  target.innerHTML=calendar.days(scheduleWeek).map(day=>{
   const dayEvents=events.filter(e=>calendar.occursOn(e,day)).sort((a,b)=>calendar.startMinutes(a)-calendar.startMinutes(b));
-  return '<section class="weekly-day'+(day===today?' is-today':'')+'" aria-labelledby="hub-day-'+day+'"><h4 id="hub-day-'+day+'"><span>'+calendar.format(day,{weekday:'long'})+'</span><time datetime="'+day+'"'+(day===today?' aria-current="date"':'')+'>'+calendar.format(day,{month:'short',day:'numeric'})+(day===today?' · Today':'')+'</time></h4><div class="weekly-day-events">'+(dayEvents.length?dayEvents.map(e=>'<article class="weekly-event"><span class="weekly-team">'+escapeHTML(e.team)+'</span><h5>'+escapeHTML(e.title)+'</h5><p class="trip-notes">'+escapeHTML(e.details)+'</p></article>').join(''):'<p class="weekly-empty">No events</p>')+'</div></section>';
+  return '<section class="weekly-day'+(day===today?' is-today':'')+'" aria-labelledby="hub-day-'+day+'"><h4 id="hub-day-'+day+'"><span>'+calendar.format(day,{weekday:'long'})+'</span><time datetime="'+day+'"'+(day===today?' aria-current="date"':'')+'>'+calendar.format(day,{month:'short',day:'numeric'})+(day===today?' · Today':'')+'</time></h4><div class="weekly-day-events">'+(dayEvents.length?dayEvents.map(e=>'<article class="weekly-event" data-jersey="'+basketballTheme(e.team)+'"><span class="weekly-team">'+escapeHTML(e.team)+'</span><h5>'+escapeHTML(e.title)+'</h5><p class="trip-notes">'+escapeHTML(e.details)+'</p></article>').join(''):'<p class="weekly-empty">No events</p>')+'</div></section>';
  }).join('');
 }
 function bindSchedule(){
@@ -370,10 +389,12 @@ function bindSchoolProgramCalendar(){
  document.querySelector('#school-calendar-today').onclick=()=>{schoolCalendarWeek=calendar.monday(calendar.today());drawSchoolProgramCalendar();};
 }
 function schoolPage(){
- return intro('SCHOOL','A clear plan. A fresh start.','Beacon Park Grade 7 is here, then the little things that keep the day moving.')+schoolProgramCalendar()+schoolWeeklyUpdate()+schoolRoster()+`<div class="two-col"><section class="panel"><h2>Your daily checklist</h2>${checklist('school',content.school||[])}</section><aside class="panel school"><div class="eyebrow">ONE THING AT A TIME</div><h2>Make a little focus space.</h2><p>Choose one task, clear a spot, and put distractions aside. Take a short break when you finish.</p><a class="primary" href="#math">Try the math warm-up ↗</a></aside></div>`;
+ return intro('BEACON PARK BENGALS','A clear plan. A fresh start.','Beacon Park Grade 7 is here, then the little things that keep the day moving.')+schoolProgramCalendar()+schoolWeeklyUpdate()+schoolRoster()+`<div class="two-col"><section class="panel"><h2>Your daily checklist</h2>${checklist('school',content.school||[])}</section><aside class="panel school"><div class="eyebrow">ONE THING AT A TIME</div><h2>Make a little focus space.</h2><p>Choose one task, clear a spot, and put distractions aside. Take a short break when you finish.</p><a class="primary" href="#math">Try the math warm-up ↗</a></aside></div>`;
 }
-function render(){const route=location.hash.slice(1);const active=sections.some(s=>s.id===route)?route:'home';document.title=`${active==='home'?'Home':sections.find(s=>s.id===active).name} · Madison Hub`;
- document.querySelector('#nav').innerHTML=[{id:'home',name:'Home'},...sections].map(s=>`<a class="nav-link" href="#${s.id}" ${s.id===active?'aria-current="page"':''}>${icon(s.id)}<span>${s.name}</span></a>`).join('');
+function render(){const {active,nav:navigation}=calendarRoute(location.hash);document.title=(navigation==='calendar'?'Calendar - '+(active==='school'?'School':'Basketball'):active==='home'?'Home':sections.find(s=>s.id===active).name)+' - Madison Hub';
+ main.dataset.calendarPanel=navigation==='calendar'?active:'';
+ main.dataset.jerseyTheme=active==='basketball'?basketballTheme(scheduleTeam):'';
+ document.querySelector('#nav').innerHTML=[{id:'home',name:'Home'},...mainSections].map(s=>`<a class="nav-link" href="#${s.id}" ${s.id===navigation?'aria-current="page"':''}>${icon(s.id)}<span>${s.name}</span></a>`).join('');
  if(active==='home') main.innerHTML=home();
  if(active==='ela'){main.innerHTML=elaPage();bindELA();}
  if(active==='ai'){main.innerHTML=aiPage();bindAI();}
@@ -382,6 +403,7 @@ function render(){const route=location.hash.slice(1);const active=sections.some(
  if(active==='basketball')main.innerHTML=intro('BASKETBALL','Your next game. Your next rep.','Keep your team schedule and your practice plan together.')+teamSchedule()+acesSkills()+`<div class="two-col"><section class="panel"><h2>Today’s practice <span class="muted">· 15 min</span></h2>${checklist('basketball',content.basketball)}</section><aside class="panel basketball"><div class="eyebrow">YOUR FOCUS</div><h2>Control before speed.</h2><p>Stay balanced. Keep your eyes up. Make each rep intentional.</p><p class="note">Start with your usual warm-up. Take water breaks and follow your coach’s guidance.</p></aside></div>`;
  if(active==='travel')main.innerHTML=travelPage();
  if(active==='school')main.innerHTML=schoolPage();
+ if(navigation==='calendar')main.insertAdjacentHTML('afterbegin',calendarSubnav(active));
  if(['school','travel','basketball'].includes(active)){main.insertAdjacentHTML('beforeend',`<p class="note">Checkmarks are saved on this device. Use Reset checklist when you want a fresh start.</p>`);}
  main.insertAdjacentHTML('beforeend',`<p id="storage-warning" class="storage-warning" ${storageOK?'hidden':''}>This browser can’t save progress right now. You can still use the hub during this visit.</p>`);
  if(active==='travel')bindTravel();

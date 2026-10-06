@@ -230,10 +230,26 @@ const officialAcesGames=[
  {id:'vfw-2026-aces-tigers-spirit',date:'2026-10-10',startTime:'14:00',time:'2:00 PM Pacific',title:'vs. Tigers Spirit',opponent:'Tigers Spirit',side:'Home'},
  {id:'vfw-2026-aces-tigers-wonder-girls',date:'2026-10-11',startTime:'12:00',time:'12:00 PM Pacific',title:'vs. Tigers Wonder Girls',opponent:'Tigers Wonder Girls',side:'Away'}
 ].map(e=>({...e,endDate:e.date,team:'aces',type:'Game',timeZone:'America/Los_Angeles',tournament:'VFW Invitational',venue:'Cypress High School - Main gym (front gym)',note:'VFW Invitational - Girls 7th Grade Silver - '+e.side+' team. Verified from the official TeamSnap schedule screenshots. Start time only; end time not provided.',sourceUrl:'https://events.teamsnap.com/events/50755/results',directionsUrl:'https://www.google.com/maps/dir/?api=1&destination=Cypress%20High%20School'}));
+const officialAcesSocial={
+  "id": "vfw-social-2026-10-10",
+  "date": "2026-10-10",
+  "endDate": "2026-10-10",
+  "team": "VFW Aces",
+  "title": "VFW Tournament Social",
+  "type": "Social",
+  "startTime": "17:00",
+  "endTime": "22:00",
+  "timeZone": "America/Los_Angeles",
+  "details": "5-10 PM Pacific - Dave & Buster's - Irvine Spectrum\n651 Spectrum Centre Drive, Irvine, CA 92618\nTeens (grades 7-12): dinner 6-9 PM on the outside patio.\nRaffle starts at 8:30 PM."
+};
+function isOfficialAcesSocialImport(e){
+ const team=String(e.team||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+ return e.date==='2026-10-10'&&(e.id===officialAcesSocial.id||(/\bsocial\b/i.test(e.title)&&(['aces','vfwaces'].includes(team)||/\bvfw\b/i.test(e.title))));
+}
 function isOfficialAcesImport(e){
  const normalize=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
  if(!['aces','vfwaces'].includes(normalize(e.team))||e.date>'2026-10-11'||(e.endDate||e.date)<'2026-10-10')return false;
- if(/practice/i.test(e.title))return false;
+ if(/practice|social/i.test(e.title))return false;
  if(/vfw|invitational/i.test(e.title)&&/tournament|invitational/i.test(e.title))return true;
  return officialAcesGames.some(game=>game.date===e.date&&(e.id===game.id||normalize(e.title).includes(normalize(game.opponent))));
 }
@@ -268,13 +284,13 @@ function scheduleEvents(){
   team:'Westside United',title:'Practice',startTime:'18:00',endTime:'19:30',timeZone:'America/Los_Angeles',
   details:'6:00-7:30 PM Pacific - Portola\nOnly Westside practice this week (October 5-11). Limited gym availability.'
  };
- return [...(state.teamSchedule?.events||[]).filter(e=>!weeklyKeys.has(key(e))&&!isChangedWestsidePractice(e)&&!isStartupProgramEvent(e)&&!isOfficialAcesImport(e)),...weekly,westsideUpdate,...acesGames];
+ return [...(state.teamSchedule?.events||[]).filter(e=>!weeklyKeys.has(key(e))&&!isChangedWestsidePractice(e)&&!isStartupProgramEvent(e)&&!isOfficialAcesImport(e)&&!isOfficialAcesSocialImport(e)),...weekly,westsideUpdate,...acesGames,officialAcesSocial];
 }
 function teamSchedule(){
  const schedule=state.teamSchedule;
  const teams=[...new Set(['OCR Pink','Westside United','VFW Aces',...(schedule?.events||[]).filter(e=>!isStartupProgramEvent(e)).map(e=>e.team)])].sort();
  if(!teams.includes(scheduleTeam))scheduleTeam='all';
- return '<section class="panel team-schedule" aria-labelledby="schedule-title"><div class="section-heading"><h2 id="schedule-title">Team schedule</h2><label class="small-button schedule-upload" for="schedule-file">Import schedule<input id="schedule-file" type="file" accept=".json,application/json"></label></div><p class="note">OCR Pink weekly sessions and the verified October 10-11 Aces games are included. Import a schedule to add other team events. Importing a new file replaces the previous imported schedule on this device.</p><p id="schedule-message" role="status"></p>'+
+ return '<section class="panel team-schedule" aria-labelledby="schedule-title"><div class="section-heading"><h2 id="schedule-title">Team schedule</h2><label class="small-button schedule-upload" for="schedule-file">Import schedule<input id="schedule-file" type="file" accept=".json,application/json"></label></div><p class="note">OCR Pink weekly sessions, the verified October 10-11 Aces games, and the October 10 VFW social are included. Import a schedule to add other team events. Importing a new file replaces the previous imported schedule on this device.</p><p id="schedule-message" role="status"></p>'+
  (schedule?'<p class="note">'+escapeHTML(schedule.source)+' · Imported snapshot from '+calendarDate(schedule.exportedAt.slice(0,10))+'<br>Imported coverage: '+calendarDate(schedule.coverageStart)+' – '+calendarDate(schedule.coverageEnd)+'</p>':'')+
  '<div class="hub-week-toolbar"><div class="week-control"><button id="schedule-prev-week" class="small-button" aria-label="Previous week">←</button><h3 id="schedule-week-label" aria-live="polite">'+calendar.label(scheduleWeek)+'</h3><button id="schedule-next-week" class="small-button" aria-label="Next week">→</button></div><button id="schedule-this-week" class="small-button">This week</button></div><div class="schedule-filters"><label>Team<select id="schedule-team"><option value="all">All teams</option>'+teams.map(team=>'<option '+(team===scheduleTeam?'selected ':'')+'value="'+escapeHTML(team)+'">'+escapeHTML(team)+'</option>').join('')+'</select></label><p class="note">Monday–Sunday · All times Pacific</p></div><div id="schedule-events" class="weekly-grid" aria-live="polite"></div>'+
  '<p class="note">Confirm changes with your team. <a class="text-button" href="https://events.teamsnap.com/events/50755/results" target="_blank" rel="noopener noreferrer">Official VFW tournament schedule</a> <a class="text-button" href="https://madison27.tomongo.chatgpt.site/#schedule" target="_blank" rel="noopener noreferrer">Open original calendar (sign-in required)</a></p></section>';
@@ -365,20 +381,132 @@ function schoolRoster(){
  return `<section class="class-roster" aria-labelledby="class-roster-heading"><div class="section-heading"><h2 id="class-roster-heading">Beacon Park · Grade 7</h2>${asOf?`<span>As of ${escapeHTML(asOf)}</span>`:''}</div>${sourceBits.length?`<p class="roster-source">${sourceBits.join(' ')}</p>`:''}<div class="class-grid">${cards}</div></section>`;
 }
 
-function schoolWeeklyUpdate(){
- return '<section class="panel team-schedule" aria-labelledby="weekly-school-heading"><div class="eyebrow">CHECKED OCTOBER 4, 2026</div><h2 id="weekly-school-heading">Class dates to keep in mind</h2><article><h3>Math 7 · Unit 1 assessment</h3><p><strong>Review Monday–Wednesday, October 5–7.</strong></p><p><strong>Thursday, October 8:</strong> Learning Targets 1.1 through 1.5.<br><strong>Friday, October 9:</strong> Learning Targets 1.6 through 1.9.</p><p>The extra practice packet from the start of the unit is due <strong>Friday, October 9</strong> and will not be accepted late. No tutorial that week because those are minimum days. The hub practice set covers Targets 1.4–1.6 only (add, multiply, and divide positive and negative fractions), not the whole unit.</p></article><article><h3>AVID · College &amp; Career Fair</h3><p><strong>Monday, October 5 · 5–7 p.m.</strong><br>Portola High School Gym</p><p>Explore college and career options and bring your questions. Mrs. Aldana encourages AVID students to attend; this is an optional event.</p></article><article><h3>AVID · Angels Stadium field trip</h3><p><strong>Tuesday, October 20, 2026</strong></p><p>Tour the stadium and learn about careers in sports. Return both your signed permission slip and stadium waiver by <strong>Friday, October 9</strong>. The forms were sent home; ask your teacher if you need another copy.</p><p>Bring your lunch, or arrange a cafeteria lunch with your teacher ahead of time. Attend Zero Period and Extended Day as usual if they are on your schedule. Make up work missed in Periods 2–5.</p></article><article><h3>AVID + ASB · Disney Imagination Campus field trip</h3><p><strong>Monday, December 14, 2026</strong></p><p>The planned course is Leadership and Teamwork the Disney Way, with a visit to California Adventure. Return your signed permission slip to Mrs. Aldana or Ms. Cassese. The trip payment deadline was <strong>October 1</strong>; check with your parent that your trip arrangements are complete.</p><p>Make up any classwork missed that day. Confirm the final schedule with your teacher before the trip.</p></article><p class="note">Teacher announcements: Math assessment, October 2; Angels Stadium trip, October 1; AVID fair and Disney trip, September 2 and September 22. <strong>No school Monday, October 12</strong> (school newsletter, October 2).</p></section>';
+const schoolDateGroups=[
+  {
+    "id": "math-unit-1",
+    "title": "Math 7 - Unit 1 assessment",
+    "context": "No tutorial that week because those are minimum days. The hub practice set covers Targets 1.4-1.6 only (add, multiply, and divide positive and negative fractions), not the whole unit.",
+    "source": "Math assessment teacher announcement, October 2, 2026.",
+    "events": [
+      {
+        "id": "math-review-2026-10-05",
+        "date": "2026-10-05",
+        "endDate": "2026-10-07",
+        "title": "Math Unit 1 review",
+        "details": "Review Monday-Wednesday, October 5-7."
+      },
+      {
+        "id": "math-assessment-2026-10-08",
+        "date": "2026-10-08",
+        "title": "Math Unit 1 assessment - Targets 1.1-1.5",
+        "details": "Learning Targets 1.1 through 1.5."
+      },
+      {
+        "id": "math-assessment-2026-10-09",
+        "date": "2026-10-09",
+        "title": "Math Unit 1 assessment - Targets 1.6-1.9",
+        "details": "Learning Targets 1.6 through 1.9."
+      },
+      {
+        "id": "math-packet-2026-10-09",
+        "date": "2026-10-09",
+        "title": "Math extra practice packet due",
+        "details": "The extra practice packet from the start of the unit is due Friday, October 9 and will not be accepted late."
+      }
+    ]
+  },
+  {
+    "id": "avid-fair",
+    "title": "AVID - College & Career Fair",
+    "context": "Explore college and career options and bring your questions. Mrs. Aldana encourages AVID students to attend; this is an optional event.",
+    "source": "AVID fair teacher announcement, September 2, 2026.",
+    "events": [
+      {
+        "id": "avid-fair-2026-10-05",
+        "date": "2026-10-05",
+        "title": "Optional AVID College & Career Fair",
+        "startTime": "17:00",
+        "endTime": "19:00",
+        "timeLabel": "5-7 p.m. Pacific",
+        "details": "Portola High School Gym."
+      }
+    ]
+  },
+  {
+    "id": "angels-trip",
+    "title": "AVID - Angels Stadium field trip",
+    "context": "Tour the stadium and learn about careers in sports. Bring your lunch, or arrange a cafeteria lunch with your teacher ahead of time. Attend Zero Period and Extended Day as usual if they are on your schedule. Make up work missed in Periods 2-5.",
+    "source": "Angels Stadium trip teacher announcement, October 1, 2026.",
+    "events": [
+      {
+        "id": "angels-forms-2026-10-09",
+        "date": "2026-10-09",
+        "title": "Angels permission slip and stadium waiver due",
+        "details": "Return both your signed permission slip and stadium waiver by Friday, October 9. The forms were sent home; ask your teacher if you need another copy."
+      },
+      {
+        "id": "angels-trip-2026-10-20",
+        "date": "2026-10-20",
+        "title": "Angels Stadium field trip",
+        "details": "Tuesday, October 20, 2026."
+      }
+    ]
+  },
+  {
+    "id": "disney-trip",
+    "title": "AVID + ASB - Disney Imagination Campus field trip",
+    "context": "The planned course is Leadership and Teamwork the Disney Way, with a visit to California Adventure. Return your signed permission slip to Mrs. Aldana or Ms. Cassese. Make up any classwork missed that day. Confirm the final schedule with your teacher before the trip.",
+    "source": "Disney trip teacher announcement, September 22, 2026.",
+    "events": [
+      {
+        "id": "disney-payment-2026-10-01",
+        "date": "2026-10-01",
+        "title": "Disney trip payment deadline (historical)",
+        "details": "The trip payment deadline was October 1; check with your parent that your trip arrangements are complete. Payment status is not recorded."
+      },
+      {
+        "id": "disney-trip-2026-12-14",
+        "date": "2026-12-14",
+        "title": "Disney Imagination Campus field trip",
+        "details": "Monday, December 14, 2026."
+      }
+    ]
+  },
+  {
+    "id": "no-school",
+    "title": "School schedule",
+    "context": "",
+    "source": "School newsletter, October 2, 2026.",
+    "events": [
+      {
+        "id": "no-school-2026-10-12",
+        "date": "2026-10-12",
+        "title": "No school",
+        "details": "No school Monday, October 12."
+      }
+    ]
+  }
+];
+function schoolDateLabel(event){
+ const options={weekday:'long',month:'long',day:'numeric',year:'numeric'};
+ return calendar.format(event.date,options)+(event.endDate&&event.endDate!==event.date?' - '+calendar.format(event.endDate,options):'')+(event.timeLabel?' - '+event.timeLabel:'');
 }
-
-let schoolCalendarWeek=calendar.monday(calendar.today()<'2026-10-13'?'2026-10-13':calendar.today());
+function schoolCalendarEvents(){
+ return [...startupStars,...schoolDateGroups.flatMap(group=>group.events.map(event=>({...event,endDate:event.endDate||event.date,team:group.title,timeZone:'America/Los_Angeles',details:[event.timeLabel||'Date only - time not provided.',event.details,group.context,group.source].filter(Boolean).join('\n')})))];
+}
+function schoolWeeklyUpdate(){
+ return '<section class="panel team-schedule" aria-labelledby="weekly-school-heading"><div class="eyebrow">CHECKED OCTOBER 4, 2026</div><h2 id="weekly-school-heading">Class dates to keep in mind</h2>'+schoolDateGroups.map(group=>'<article><h3>'+escapeHTML(group.title)+'</h3>'+group.events.map(event=>'<p><strong>'+escapeHTML(schoolDateLabel(event))+'</strong><br>'+escapeHTML(event.title)+'<br>'+escapeHTML(event.details)+'</p>').join('')+(group.context?'<p>'+escapeHTML(group.context)+'</p>':'')+'<p class="note">'+escapeHTML(group.source)+'</p></article>').join('')+'</section>';
+}
+let schoolCalendarWeek=calendar.monday(calendar.today());
 function schoolProgramCalendar(){
- return '<section class="panel team-schedule" aria-labelledby="school-calendar-title"><div class="section-heading"><h2 id="school-calendar-title">School program calendar</h2></div><p><strong>Startup Stars - Beginner Tuesdays</strong><br>October 13-November 17, 2026. 3:15-4:15 PM Pacific, room P29.</p><p class="note">Grades 6-8. Bengal Marketplace date TBD.</p><div class="hub-week-toolbar"><div class="week-control"><button id="school-calendar-prev" class="small-button" aria-label="Previous school calendar week">Previous</button><h3 id="school-calendar-week" aria-live="polite">'+calendar.label(schoolCalendarWeek)+'</h3><button id="school-calendar-next" class="small-button" aria-label="Next school calendar week">Next</button></div><button id="school-calendar-today" class="small-button">This week</button></div><p class="note">Monday-Sunday - All times Pacific</p><div id="school-calendar-events" class="weekly-grid" aria-live="polite"></div></section>';
+ return '<section class="panel team-schedule" aria-labelledby="school-calendar-title"><div class="section-heading"><h2 id="school-calendar-title">School calendar</h2></div><p>Class dates, deadlines, field trips, and Startup Stars.</p><div class="hub-week-toolbar"><div class="week-control"><button id="school-calendar-prev" class="small-button" aria-label="Previous school calendar week">Previous</button><h3 id="school-calendar-week" aria-live="polite">'+calendar.label(schoolCalendarWeek)+'</h3><button id="school-calendar-next" class="small-button" aria-label="Next school calendar week">Next</button></div><button id="school-calendar-today" class="small-button">This week</button></div><p class="note">Monday-Sunday - All times Pacific</p><div id="school-calendar-events" class="weekly-grid" aria-live="polite"></div></section>';
 }
 function drawSchoolProgramCalendar(){
  const target=document.querySelector('#school-calendar-events');if(!target)return;
  document.querySelector('#school-calendar-week').textContent=calendar.label(schoolCalendarWeek);
  const today=calendar.today();
  target.innerHTML=calendar.days(schoolCalendarWeek).map(day=>{
-  const events=startupStars.filter(e=>calendar.occursOn(e,day));
+  const events=schoolCalendarEvents().filter(e=>calendar.occursOn(e,day)).sort((a,b)=>(a.startTime?calendar.startMinutes(a):-1)-(b.startTime?calendar.startMinutes(b):-1));
   return '<section class="weekly-day'+(day===today?' is-today':'')+'" aria-labelledby="school-program-day-'+day+'"><h4 id="school-program-day-'+day+'"><span>'+calendar.format(day,{weekday:'long'})+'</span><time datetime="'+day+'"'+(day===today?' aria-current="date"':'')+'>'+calendar.format(day,{month:'short',day:'numeric'})+'</time></h4><div class="weekly-day-events">'+(events.length?events.map(e=>'<article class="weekly-event"><span class="weekly-team">'+escapeHTML(e.team)+'</span><h5>'+escapeHTML(e.title)+'</h5><p class="trip-notes">'+escapeHTML(e.details)+'</p></article>').join(''):'<p class="weekly-empty">No events</p>')+'</div></section>';
  }).join('');
 }

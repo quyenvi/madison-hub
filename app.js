@@ -240,7 +240,7 @@ const officialAcesSocial={
   "startTime": "17:00",
   "endTime": "22:00",
   "timeZone": "America/Los_Angeles",
-  "details": "5-10 PM Pacific - Dave & Buster's - Irvine Spectrum\n651 Spectrum Centre Drive, Irvine, CA 92618\nTeens (grades 7-12): dinner 6-9 PM on the outside patio.\nRaffle starts at 8:30 PM."
+  "details": "5-10 PM Pacific - Dave & Buster's - Irvine Spectrum\n651 Spectrum Centre Drive, Irvine, CA 92618\nTeens (grades 7-12): dinner 6-9 PM on the outside patio.\nTeen raffle starts at 9 PM. Submit raffle tickets by 8:45 PM in the Showroom's Teens' Prize section. Winners must be present. Dance until 10 PM."
 };
 function isOfficialAcesSocialImport(e){
  const team=String(e.team||'').toLowerCase().replace(/[^a-z0-9]/g,'');
